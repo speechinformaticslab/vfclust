@@ -1,0 +1,3 @@
+- Get lit references for clustering
+- How were thresholds calculated?
+- tests?

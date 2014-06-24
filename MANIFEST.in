@@ -1,0 +1,7 @@
+include t2p/*
+include Makefile
+include LICENSE.txt
+include data/*
+## When adding in the app:
+# include vfclust_app 
+# include requirements.txt
