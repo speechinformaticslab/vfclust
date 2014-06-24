@@ -1,5 +1,10 @@
-include t2p/*
+recursive-include docs/_build/html *.*
+include t2p/t2p.c
+include t2p/t2pin.tmp
+#include example/EXAMPLE.*
+#include example/EXAMPLE_sem.*
 include Makefile
+include CHANGES.txt
 include LICENSE.txt
 include data/*
 ## When adding in the app:

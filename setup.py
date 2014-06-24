@@ -30,7 +30,7 @@ class MyInstall(distutils_install):
 
 setup(
     name='VFClust',
-    version='0.1.0',
+    version='0.1.1',
     packages=['vfclust'],
     py_modules=['vfclust'],
     include_package_data=True,
@@ -38,8 +38,8 @@ setup(
     license='Apache License, Version 2.0',
     author='Thomas Christie, James Ryan, and Serguei Pakhomov',
     author_email='tchristie@umn.edu',
-    description="Clustering of Verbal Fluency responses",
-    long_description=open('README.txt').read(),
+    description="Clustering of Verbal Fluency responses.",
+    long_description=open('README.rst').read(),
     # install_requires=requirements,  # TODO: Add in after making app.py work again.
     cmdclass={'install': MyInstall},
     entry_points={

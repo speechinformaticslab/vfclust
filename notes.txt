@@ -1,3 +1,27 @@
+#How to update:
+1. change version number in setup.py
+2. change CHANGES.txt to reflect changes
+3. run python setup.py sdist  #updates distribution
+4. check dist/version.tar.gz to make sure it's working
+4. run python setup.py sdist upload  to upload
+
+#To generate documentation:
+1. run sphinx-autodoc
+    - root path "docs"
+    - autodoc "y"
+2. cd docs
+3. sphinx-apidoc -o . ../vfclust/  #put docs here, source is /vfclust/ module
+4. edit index.rst to have ".. include:: ../README.rst" just before "Contents"
+5. edit conf.py copyright to be Serguei
+6. run "make html" to generate the html docs.
+Optional:
+add the following to conf.py:
+    autodoc_default_flags = ["members", "inherited-members", "show-inheritance"]
+    autodoc_member_order = "bysource"
+    autoclass_content = "both"
+    html_theme = 'nature'
+
+
 - Get lit references for clustering
 - How were thresholds calculated?
 - tests?

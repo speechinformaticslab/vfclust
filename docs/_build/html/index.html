@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Welcome to vfclust’s documentation! &mdash; vfclust 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="vfclust 0.1.0 documentation" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">vfclust 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="welcome-to-vfclust-s-documentation">
+<h1>Welcome to vfclust&#8217;s documentation!<a class="headerlink" href="#welcome-to-vfclust-s-documentation" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="vfclust">
+<h1>VFClust<a class="headerlink" href="#vfclust" title="Permalink to this headline">¶</a></h1>
+<p>This package is designed to generate clustering analyses for
+transcriptions of semantic and phonemic verbal fluency test responses.
+In a verbal fluency test, the subject is given a set amount of time
+(usually 60 seconds) to name as many words as he or she can that
+correspond to a given specification. For a phonemic test, subjects are
+asked to name words that begin with a specific letter. For a semantic
+fluency test, subjects are asked to provide words of a certain category,
+e.g. animals. VFClust groups words in responses based on phonemic or
+semantic similarity, as described below. It then calculates metrics
+derived from the discovered groups and returns them as a CSV file or
+Python dict.</p>
+<p>Verbal fluency tests are often used in test batteries used to study
+cognitive impairment arising from e.g. Alzheimer&#8217;s disease, Parkinson&#8217;s
+disease, and certain medications.</p>
+<p>More here on scientific background for clustering...</p>
+<p>Mayr, U. (2002). On the dissociation between clustering and switching in
+verbal fluency: Comment on Troyer, Moscovitch, Winocur, Alexander and
+Stuss. Neuropsychologia, 40(5), 562-566.</p>
+<p>Ryan et al., Computerized Analysis of a Verbal Fluency Test
+<a class="reference external" href="http://rxinformatics.umn.edu/downloads/VFCLUST/ryan_acl2013.pdf">http://rxinformatics.umn.edu/downloads/VFCLUST/ryan_acl2013.pdf</a></p>
+<div class="section" id="clustering-in-vfclust">
+<h2>Clustering in VFClust<a class="headerlink" href="#clustering-in-vfclust" title="Permalink to this headline">¶</a></h2>
+<p>VFClust finds adjacent subsets of words of the following types:</p>
+<ul class="simple">
+<li>clusters: every entry in a cluster is sufficiently similar to every
+other entry</li>
+<li>chains: every entry in a chain is sufficiently similar to adjacent
+entries</li>
+</ul>
+<p>where &#8220;entry&#8221; corresponds to a word, compound word, or multiple adjacent
+words with the same stem.</p>
+<p>Similarity scores between words are thresholded and binarized using
+empirically-derived thresholds. Overlap of clusters is allowed (a word
+can be part of multiple clusters), but overlapping chains are not
+possible, as any two adjacent words with a lower-than-threshold
+similarity breaks the chain. Clusters subsumed by other clusters are not
+counted.</p>
+<p>The similarity measures used are the following:</p>
+<ul class="simple">
+<li>PHONETIC/&#8221;phone&#8221;: the phonetic similarity score (PSS) is calculated
+between the phonetic representations of the input units. It is equal
+to 1 minus the Levenshtein distance between two strings, normalized
+to the length of the longer string. The strings should be compact
+phonetic representations of the two words. (This method is a
+modification of a Levenshtein distance function available at
+<a class="reference external" href="http://hetland.org/coding/python/levenshtein.py">http://hetland.org/coding/python/levenshtein.py</a>.)</li>
+<li>PHONETIC/&#8221;biphone&#8221;: the binary common-biphone score (CBS) depends on
+whether two words share their initial and/or final biphone (i.e., set
+of two phonemes). A score of 1 indicates that two words have the same
+intial and/or final biphone; a score of 0 indicates that two words
+have neither the same initial nor final biphone This is also
+calculated using the phonetic representation of the two words.</li>
+<li>SEMANTIC/&#8221;lsa&#8221;: a semantic relatedness score (SRS) is calculated as
+the COSINE of the respective term vectors for the first and second
+word in an LSA space of the specified clustering_parameter. Unlike
+the PHONETIC methods, this method uses the .text property of the
+input Unit objects.</li>
+</ul>
+<div class="section" id="output">
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<p>After chains/clusters are discovered using the methods relevant for the
+type of fluency test performed, metrics are derived from the clusters
+and output to screen and a .csv file (if run as a script) or to a python
+dict object (if run as a package). The following metrics are calculated:</p>
+<p>Counts of different token types in the raw input. Each of these is
+prefaced by &#8216;&#8217;COUNT_&#8217;&#8217; in the output.</p>
+<ul class="simple">
+<li>total_words: count of words (i.e. utterances with semantic content)
+spoken by the subject. Filled pauses, silences, coughs, breaths,
+words by the interviewer, etc. are all excluded from this count.</li>
+<li>permissible_words: Number of words spoken by the subject that
+qualify as a valid response according to the clustering criteria.
+Compound words are counted as a single word in SEMANTIC clustering,
+but as two words in PHONETIC clustering.</li>
+<li>exact_repetitions: Number of words which repeat words spoken earlier
+in the response. Responses in SEMANTIC clustering are lemmatized
+before this function is called, so slight variations (dog, dogs) may
+be counted as exact responses.</li>
+<li>stem_repetitions: Number of words stems identical to words uttered
+earlier in the response, according to the Porter Stemmer. For
+example, &#8216;sled&#8217; and &#8216;sledding&#8217; have the same stem (&#8216;sled&#8217;), and
+&#8216;sledding&#8217; would be counted as a stem repetition.</li>
+<li>examiner_words: Number of words uttered by the examiner. These start
+with &#8220;E_&#8221; in .TextGrid files.</li>
+<li>filled_pauses: Number of filled pauses uttered by the subject. These
+begin with &#8220;FILLEDPAUSE_&#8221; in the .TextGrid file.</li>
+<li>word_fragments: Number of word fragments uttered by the subject.
+These end with &#8220;-&#8221; in the .TextGrid file.</li>
+<li>asides: Words spoken by the subject that do not adhere to the test
+criteria are counted as asides, i.e. words that do not start with the
+appropriate letter or that do not represent an animal.</li>
+<li>unique_permissible_words: Number of works spoken by the subject,
+less asides, stem repetitions and exact repetitions.</li>
+</ul>
+<p>Measures derived from clusters/chains in the response. Each of these is
+prefaced by &#8216;&#8217;COLLECTION_&#8217;&#8216;, along with the similarity measure used and
+the collection type the measure was calculated over.</p>
+<ul class="simple">
+<li>pairwise_similarity_score_mean: mean of pairwise similarity
+scores. The pairwise similarity is calculated as the sum of
+similarity scores for all pairwise word pairs in a response &#8211; except
+any pair composed of a word and itself &#8211; divided by the total number
+of words in an attempt. I.e., the mean similarity for all pairwise
+word pairs.</li>
+<li>count: number of collections</li>
+<li>size_mean: mean size of collections</li>
+<li>size_max: size of largest collection</li>
+<li>switch_count: number of changes between clusters</li>
+</ul>
+<p>Measures derived from timing information in the response, along with
+clusters/chains. Each of these is prefaced by &#8216;&#8217;TIMING_&#8217;&#8217; along with
+the along with the similarity measure used and the collection type the
+measure was calculated over.</p>
+<ul class="simple">
+<li>response_vowel_duration_mean: average vowel duration of all vowels
+in the response.-</li>
+<li>response_continuant_duration_mean: average vowel duration of all
+vowels in the response.</li>
+<li>between_collection_interval_duration_mean: average interval
+duration separating clusters. Negative intervals (for overlapping
+clusters) are counted as 0 seconds. Intervals are calculated as being
+the difference between the ending time of the last word in a
+collection and the start time of the first word in the subsequent
+collection. Note that these intervals are not necessarily silences,
+and may include asides, filled pauses, words from the examiner, etc.</li>
+<li>within_collection_interval_duration_mean: the mean time between
+the end of each word in the collection and the beginning of the next
+word. Note that these times do not necessarily reflect pauses, as
+collection members could be separated by asides or other noises.</li>
+<li>within_collection_vowel_duration_mean: average duration of vowels
+that occur within a collection</li>
+<li>within_collection_continuant_duration_mean: average duration of
+continuants that occur within a collection.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="project-setup">
+<h2>Project Setup<a class="headerlink" href="#project-setup" title="Permalink to this headline">¶</a></h2>
+<p>To install the package, download the zip file, and extract it. In the
+terminal, navigate to the location of the unzipped package and type</p>
+<div class="highlight-python"><div class="highlight"><pre>python setup.py install
+</pre></div>
+</div>
+<p>You will need to have the gcc compiler installed on your system.
+Installing also includes compiling a C executable for the
+grapheme-to-phoneme conversion (t2p) that the phonetic clustering
+package uses. If everything went okay, you should see the following
+output in the console:</p>
+<div class="highlight-python"><div class="highlight"><pre>success S AH0 K S EH1 S
+</pre></div>
+</div>
+<p>along with other output from the install process.</p>
+<p>Check that the package is installed by starting Python and typing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">vfclust</span>
+</pre></div>
+</div>
+<p>You can also check that the script runs by changing to the vfclust
+subdirectory and running:</p>
+<div class="highlight-python"><div class="highlight"><pre>python vfclust.py ../example/EXAMPLE.TextGrid -p s
+</pre></div>
+</div>
+<p>This runs VFClust on a phonemic fluency test response using the letter
+&#8216;s&#8217; on the EXAMPLE.TextGrid file provided.</p>
+<div class="section" id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
+<p>This package has been tested on Mac OS X (Mavericks). In order to run
+the package you must have the following installed on your machine:</p>
+<ol class="arabic" start="0">
+<li><p class="first">Python 2.7</p>
+</li>
+<li><p class="first"><strong>NLTK</strong>: VFClust requires the Natural Language Toolkit (NLTK), as it
+uses the NLTK lemmatizer and stemmer in parsing subject responses.
+Check <a class="reference external" href="http://www.nltk.org">http://www.nltk.org</a> for more information on how to install
+NLTK.</p>
+</li>
+<li><p class="first"><strong>pip</strong>: To install pip from any computer that already has Python 2.7
+installed, go to your terminal or commandline of choice and enter the
+command below:</p>
+<p>easy_install pip</p>
+</li>
+<li><p class="first"><strong>gcc</strong>: On Mac OS X, you will need to install the latest version of
+Xcode compatible with your version of OS X with Command-line tools
+package (<a class="reference external" href="https://developer.apple.com/xcode/">https://developer.apple.com/xcode/</a>). Keep in mind that you
+may need to enable command-line tools in Xcode in order to be able to
+use the gcc compiler. If you can&#8217;t run gcc from command-line after
+installing Xcode, go to the Xcode Preferences/Downloads tab and
+select the &#8220;Install&#8221; button, next to &#8220;Command Line Tools.&#8221;</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p><em>How do I run the project&#8217;s automated tests?</em></p>
+</div>
+<div class="section" id="deploying">
+<h2>Deploying<a class="headerlink" href="#deploying" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="input">
+<h3><em>Input</em><a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
+<p>VFClust operations are performed on transcriptions of</p>
+</div>
+<div class="section" id="as-a-script">
+<h3><em>As a script</em><a class="headerlink" href="#as-a-script" title="Permalink to this headline">¶</a></h3>
+<p>Navigate to the directory containing the vfclust.py file (it should be
+in the vfclust/ subdirectory) and type:</p>
+<div class="highlight-python"><div class="highlight"><pre>vfclust.py [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q] source_file_path
+</pre></div>
+</div>
+<p>Bracketed arguments are optional, but either -s (semantic) or -p
+(phonemic) must be selected. The arguments are as follows:</p>
+<p>positional arguments: source_file_path Full path of textgrid or csv
+file to parse</p>
+<p>optional arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre>-h, --help      show this help message and exit
+
+-s SEMANTIC     Usage: -s animals If included, calculates measures for the
+                given category for the semantic fluency test, i.e.
+                animals, fruits, etc.
+
+-p PHONEMIC     Usage: -p f If included, calculates measures for the given
+                category for the phonemic fluency test, i.e. a, f, s, etc.
+
+-o OUTPUT_PATH  Where to put output - default is the same directory as the
+                input file working directory.
+
+-q              Use to eliminate output to screen (default is print everything to
+                stdout).
+</pre></div>
+</div>
+</div>
+<div class="section" id="as-a-python-package">
+<h3><em>As a Python package</em><a class="headerlink" href="#as-a-python-package" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="contributing-changes">
+<h2>Contributing changes<a class="headerlink" href="#contributing-changes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><em>Internal git workflow</em></li>
+<li><em>Pull request guidelines</em></li>
+<li><em>Tracker project</em></li>
+<li><em>Google group</em></li>
+<li><em>irc channel</em></li>
+<li><em>&#8220;Please open github issues&#8221;</em></li>
+</ul>
+</div>
+<div class="section" id="acknowledgements">
+<h2>ACKNOWLEDGEMENTS<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>This package uses a grapheme-to-phoneme conversion (t2p) implementation
+by the MBRDICO Project (<a class="reference external" href="http://tcts.fpms.ac.be/synthesis/mbrdico/">http://tcts.fpms.ac.be/synthesis/mbrdico/</a>).</p>
+<p>The English Open Word List is used as a basic dictionary of English
+words. <a class="reference external" href="http://dreamsteep.com/projects/the-english-open-word-list.html">http://dreamsteep.com/projects/the-english-open-word-list.html</a></p>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>All files which are included as a part of the VFClust Phonetic
+Clustering Module are provided under an Apache license, excluding:</p>
+<ul class="simple">
+<li>t2p.c in the src directory, which is provided under a GPL license,
+and</li>
+<li>english_words.txt in the data/EOWL directory, which is a
+modification of the UK Advanced Cryptics Dictionary and is released
+with the following licensing:</li>
+</ul>
+<p>Copyright  J Ross Beresford 1993-1999. All Rights Reserved. The
+following restriction is placed on the use of this publication: if the
+UK Advanced Cryptics Dictionary is used in a software package or
+redistributed in any form, the copyright notice must be prominently
+displayed and the text of this document must be included verbatim.</p>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to vfclust&#8217;s documentation!</a></li>
+<li><a class="reference internal" href="#vfclust">VFClust</a><ul>
+<li><a class="reference internal" href="#clustering-in-vfclust">Clustering in VFClust</a><ul>
+<li><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#project-setup">Project Setup</a><ul>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#deploying">Deploying</a><ul>
+<li><a class="reference internal" href="#input"><em>Input</em></a></li>
+<li><a class="reference internal" href="#as-a-script"><em>As a script</em></a></li>
+<li><a class="reference internal" href="#as-a-python-package"><em>As a Python package</em></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#contributing-changes">Contributing changes</a></li>
+<li><a class="reference internal" href="#acknowledgements">ACKNOWLEDGEMENTS</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="#">vfclust 0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Serguei Pakhomov..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
