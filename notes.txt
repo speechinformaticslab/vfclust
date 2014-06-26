@@ -5,6 +5,22 @@
 4. check dist/version.tar.gz to make sure it's working
 4. run python setup.py sdist upload  to upload
 
+
+#can install development version locally by typing
+python setup.py develop
+#This doesn't install in default installation directory, but tells python to look
+#in the git folder for the source instead.
+
+#Make sure README doesn't have syntax errors
+python setup.py check
+
+#what to include:
+MANIFEST.in has to have everything you want in the .tar.gz source distribution
+anything you want installed in site-packages has to be listed in the package_data in setup
+
+#default pip installation directory
+/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/
+
 #To generate documentation:
 1. run sphinx-autodoc
     - root path "docs"
@@ -20,6 +36,22 @@ add the following to conf.py:
     autodoc_member_order = "bysource"
     autoclass_content = "both"
     html_theme = 'nature'
+
+#create source code distribution (this is uploaded to pip) and put it in the dist directory
+python setup.py sdist
+
+#To test pip installation
+https://wiki.python.org/moin/TestPyPI
+upload -
+#if not registered
+python setup.py register -r https://testpypi.python.org/pypi
+#then upload
+#python setup.py sdist upload -r https://testpypi.python.org/pypi
+python setup.py sdist
+twine upload -r test dist/VFClust-0.1.4.1.tar.gz #or whatever the current version is
+#install -
+#from virtualenv - source bin/activate
+pip install -i https://testpypi.python.org/pypi vfclust --upgrade
 
 
 - Get lit references for clustering

@@ -1030,15 +1030,38 @@ and adds &#8220;no_singletons&#8221; to the prefix</li>
 &#8220;vfclust_TYPE_CATEGORY&#8221; appended to the filename, where TYPE indicates
 the type of task performed done (SEMANTIC or PHONETIC) and CATEGORY
 indicates the category requirement of the stimulus (i.e. &#8216;f&#8217; or &#8216;animals&#8217;
-for phonetic and semantic fluency tests, respectively.</p>
+for phonetic and semantic fluency test, respectively.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="vfclust.vfclust.get_duration_measures">
-<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">get_duration_measures</tt><big>(</big><em>output_path='./'</em>, <em>phonemic=False</em>, <em>semantic=False</em>, <em>source_file_path='./'</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.get_duration_measures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function called using the command line interface that performs a complete clustering of the input.</p>
+<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">get_duration_measures</tt><big>(</big><em>source_file_path</em>, <em>output_path=None</em>, <em>phonemic=False</em>, <em>semantic=False</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.get_duration_measures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses input arguments and runs clustering algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source_file_path</strong> &#8211; Required. Location of the .csv or .TextGrid file to be
+analyzed.</li>
+<li><strong>output_path</strong> &#8211; Path to which to write the resultant csv file. If left None,
+path will be set to the source_file_path.  If set to False, no file will be
+written.</li>
+<li><strong>phonemic</strong> &#8211; The letter used for phonetic clustering. Note: should be False if
+semantic clustering is being used.</li>
+<li><strong>semantic</strong> &#8211; The word category used for semantic clustering. Note: should be
+False if phonetic clustering is being used.</li>
+<li><strong>quiet</strong> &#8211; Set to True if you want to suppress output to the screen during processing.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return data:</th><td class="field-body"><p class="first last">A dictionary of measures derived by clustering the input response.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1049,9 +1072,13 @@ for phonetic and semantic fluency tests, respectively.</p>
 
 <dl class="function">
 <dt id="vfclust.vfclust.main">
-<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parses arguments and calls function</p>
-</dd></dl>
+<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">main</tt><big>(</big><em>test=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="vfclust.vfclust.test_script">
+<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">test_script</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.test_script" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-vfclust">
@@ -1059,9 +1086,7 @@ for phonetic and semantic fluency tests, respectively.</p>
 <p>To setup (from terminal):
 $ cd /path/to/vfclust/download
 $ python setup.py install</p>
-<p>To run with Python &#8211; result is a python dictionary
-&gt;&gt; import vfclust</p>
-<p>To run from command line</p>
+<p>&gt;&gt; import vfclust</p>
 <p>For arguments and default values, see the README.md file.</p>
 </div>
 </div>

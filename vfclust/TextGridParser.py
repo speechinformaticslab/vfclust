@@ -10,7 +10,7 @@ class TextGrid(object):
         
         """
         textgrid = open(textgrid, 'r').read()
-        #todo TOM-CHRISTIE for some reason this is being called on .txt file
+
         # Extract word intervals from TextGrid
         self.word_intervals = textgrid[textgrid.index('intervals [1]:'):textgrid.index('item [2]:')]
         self.word_intervals = self.word_intervals.split('\"\n')

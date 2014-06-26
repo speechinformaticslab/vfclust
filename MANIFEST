@@ -2,6 +2,8 @@
 CHANGES.txt
 LICENSE.txt
 Makefile
+README
+requirements.txt
 setup.py
 data/.DS_Store
 data/animals_lemmas.dat

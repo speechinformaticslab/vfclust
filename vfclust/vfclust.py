@@ -2,7 +2,7 @@
 The VFClust package is designed to generate clustering analyses for transcriptions of semantic and phonemic verbal fluency test responses. In a verbal fluency test, the subject is given a set amount of time (usually 60 seconds) to name as many words as he or she can that correspond to a given specification. For a phonemic test, subjects are asked to name words that begin with a specific letter. For a semantic fluency test, subjects are asked to provide words of a certain category, e.g. animals.  VFClust groups words in responses based on phonemic or semantic similarity, as described below. It then calculates metrics derived from the discovered groups and returns them as a CSV file or Python dict.
 """
 from __future__ import division  # makes / do floating point division
-import os, re, subprocess, csv, argparse
+import os, re, subprocess, csv, argparse, sys
 import cPickle as pickle  # faster for the LSA part
 from collections import defaultdict
 from tempfile import NamedTemporaryFile
@@ -14,7 +14,7 @@ from nltk import PorterStemmer
 lemmatizer = WordNetLemmatizer()
 stemmer = PorterStemmer()
 
-data_path = os.path.join(os.path.dirname(__file__), '../data/')
+data_path = os.path.join(os.path.dirname(__file__), 'data/')
 __docformat__ = "restructuredtext en"
 
 def print_table(table):
@@ -371,9 +371,10 @@ class ParsedResponse():
             # Write the word to a temp file
             temp_file.write(word)
             #todo - clean up this messy t2p path
-            t2pargs = [os.path.abspath(os.path.join(os.path.dirname(__file__),'../t2p/t2p')),
+            t2pargs = [os.path.abspath(os.path.join(os.path.dirname(__file__),'t2p/t2p')),
                        '-transcribe', os.path.join(data_path, 'cmudict.0.7a.tree'),
                        temp_file.name]
+            print t2pargs
             temp_file.seek(0)
             output, error = subprocess.Popen(
                 t2pargs, stdout=subprocess.PIPE,
@@ -1476,7 +1477,7 @@ class VFClustEngine(object):
         "vfclust_TYPE_CATEGORY" appended to the filename, where TYPE indicates
         the type of task performed done (SEMANTIC or PHONETIC) and CATEGORY
         indicates the category requirement of the stimulus (i.e. 'f' or 'animals'
-        for phonetic and semantic fluency tests, respectively.
+        for phonetic and semantic fluency test, respectively.
         """
         if self.response_format == "csv":
             for key in self.measures:
@@ -1519,19 +1520,26 @@ class VFClustEngine(object):
                                 [self.measures["_".join(e.split('_')[1:])] for e in header[1:]])
 
 
-def get_duration_measures(output_path='./',
+
+def get_duration_measures(source_file_path,
+                          output_path=None,
                           phonemic=False,
                           semantic=False,
-                          source_file_path='./',
                           quiet=False):
     """Parses input arguments and runs clustering algorithm.
 
-    :param output_path: P
-    :param phonemic:
-    :param semantic:
-    :param source_file_path:
-    :param quiet:
-    :return data: A dictionary of
+    :param source_file_path: Required. Location of the .csv or .TextGrid file to be
+        analyzed.
+    :param output_path: Path to which to write the resultant csv file. If left None,
+        path will be set to the source_file_path.  If set to False, no file will be
+        written.
+    :param phonemic: The letter used for phonetic clustering. Note: should be False if
+        semantic clustering is being used.
+    :param semantic: The word category used for semantic clustering. Note: should be
+        False if phonetic clustering is being used.
+    :param quiet: Set to True if you want to suppress output to the screen during processing.
+
+    :return data: A dictionary of measures derived by clustering the input response.
 
     """
 
@@ -1554,12 +1562,21 @@ def get_duration_measures(output_path='./',
         response_category = ""
         output_prefix = ""
 
-    measures = VFClustEngine(response_category=response_category,
+    if args.output_path:
+        #want to output csv file
+        target_file_path = os.path.join(args.output_path, output_prefix + '.csv')
+    else:
+        #no output to system
+        target_file_path = False
+
+    engine = VFClustEngine(response_category=response_category,
                       response_file_path=args.source_file_path,
-                      target_file_path=os.path.join(args.output_path, output_prefix + '.csv'),
+                      target_file_path=target_file_path,
                       quiet = args.quiet
     )
-    return measures
+
+
+    return dict(engine.measures)
 
 
 def validate_arguments(args):
@@ -1575,17 +1592,24 @@ def validate_arguments(args):
     if not os.path.isfile(args.source_file_path):
         raise VFClustException('The input file path you provided does not exist on your system!')
 
-    #verify/make folders for output
-    if len(args.output_path) == 0:
-        args.output_path = os.path.abspath(os.path.dirname(args.source_file_path))
-    try:
-        if not os.path.isdir(args.output_path):
-            os.mkdir(args.output_path)
-    except:
-        print "Error creating folder for program output. " \
-              "Make sure you have write permissions to the folder you provided. " \
-              "You can change the folder with the -o option." \
-              "The output directory will be the same as the input directory."
+    #if no output path provided, write to source file path
+    if args.output_path == None:
+        args.output_path = args.source_path
+    #if output_path is False, don't output anything
+    elif args.output_path == False:
+        pass
+    else:
+        #verify/make folders for output
+        if len(args.output_path) == 0:
+            args.output_path = os.path.abspath(os.path.dirname(args.source_file_path))
+        try:
+            if not os.path.isdir(args.output_path):
+                os.mkdir(args.output_path)
+        except:
+            print "Error creating folder for program output. " \
+                  "Make sure you have write permissions to the folder you provided. " \
+                  "You can change the folder with the -o option." \
+                  "The output directory will be the same as the input directory."
 
 
     #make phonemic and semantic args lower case
@@ -1611,7 +1635,8 @@ def validate_arguments(args):
 
     #make paths absolute
     args.source_file_path = os.path.abspath(args.source_file_path)
-    args.output_path = os.path.abspath(args.output_path)
+    if args.output_path:
+        args.output_path = os.path.abspath(args.output_path)
 
     print "OK!"
     print
@@ -1620,41 +1645,63 @@ def validate_arguments(args):
 
     return args
 
+def main(test=False):
+    # print "DEBUG",__name__, sys.argv
+    # from "vfclust test" --> vfclust.vfclust ['/Library/Frameworks/Python.framework/Versions/2.7/bin/vfclust', 'test']
+    # from "pyton vfclust.py" --> DEBUG __main__ ['vfclust.py', 'example/EXAMPLE_sem.TextGrid', '-s', 'animals']
 
-def main():
-    """Parses arguments and calls function"""
-    parser = argparse.ArgumentParser()
+    if test or sys.argv[1] == "test":
+        test_script()
+    else:
 
-    parser.add_argument('source_file_path',
-                        help="Full path of textgrid or csv file to parse")
+        parser = argparse.ArgumentParser()
 
-    parser.add_argument('-s', dest='semantic',
-                        default=False,action="store",
-                        help='''Usage: -s animals\n
-                            If included, calculates measures for the given category \n
-                            for the semantic fluency test, i.e. animals, fruits, etc.
-                            ''')
+        parser.add_argument('source_file_path',
+                            help="Full path of textgrid or csv file to parse")
 
-    parser.add_argument('-p', dest='phonemic',
-                        default=False,action='store',
-                        help='''Usage: -p f\n
-                            If included, calculates measures for the given category \n
-                            for the phonemic fluency test, i.e. a, f, s, etc.
-                            ''')
+        parser.add_argument('-s', dest='semantic',
+                            default=False,action="store",
+                            help='''Usage: -s animals\n
+                                If included, calculates measures for the given category \n
+                                for the semantic fluency test, i.e. animals, fruits, etc.
+                                ''')
 
-    parser.add_argument('-o', dest='output_path', default="",
-                        help="Where to put output - default is the same directory as the input file working directory.")
+        parser.add_argument('-p', dest='phonemic',
+                            default=False,action='store',
+                            help='''Usage: -p f\n
+                                If included, calculates measures for the given category \n
+                                for the phonemic fluency test, i.e. a, f, s, etc.
+                                ''')
 
-    parser.add_argument('-q', dest='quiet', default=False, action='store_true',
-                        help="Use to eliminate output (default is print everything to stdout).")
+        parser.add_argument('-o', dest='output_path', default="",
+                            help="Where to put output - default is the same directory as the input file working directory.")
 
-    args = parser.parse_args()
+        parser.add_argument('-q', dest='quiet', default=False, action='store_true',
+                            help="Use to eliminate output (default is print everything to stdout).")
 
-    get_duration_measures(output_path=args.output_path,
-                                    phonemic=args.phonemic,
-                                    semantic=args.semantic,
-                                    source_file_path=args.source_file_path,
-                                    quiet=args.quiet)
+        args = parser.parse_args()
 
-if __name__ == '__main__':
+        get_duration_measures(output_path=args.output_path,
+                                        phonemic=args.phonemic,
+                                        semantic=args.semantic,
+                                        source_file_path=args.source_file_path,
+                                        quiet=args.quiet)
+
+def test_script():
+    path = os.path.abspath(os.path.join(os.path.dirname(__file__),'example'))
+    example_csv = os.path.join(path,'EXAMPLE.csv')
+    example_textgrid = os.path.join(path,'EXAMPLE_sem.TextGrid')
+    print example_csv
+    print example_textgrid
+    results_csv = get_duration_measures(source_file_path = example_csv,
+                                                output_path=False,
+                                                phonemic='f')
+    results_textgrid = get_duration_measures(source_file_path = example_textgrid,
+                                                output_path=False,
+                                                semantic='animals')
+
+
+#if it's called as python vfclust.py, this happens
+if __name__ == "__main__":
+    print 'called using python vfclust.py'
     main()

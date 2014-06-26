@@ -6,7 +6,7 @@
 Welcome to vfclust's documentation!
 ===================================
 
-.. include:: ../README.rst
+.. include:: ../README
 
 Contents:
 

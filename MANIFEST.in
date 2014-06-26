@@ -1,12 +1,27 @@
+#documentation
 recursive-include docs/_build/html *.*
-include t2p/t2p.c
-include t2p/t2pin.tmp
-#include example/EXAMPLE.*
-#include example/EXAMPLE_sem.*
-include Makefile
+
+#data used for clustering
+recursive-include vfclust/data *
+
+#phonetic representation
+include vfclust/t2p/t2p.c
+include vfclust/t2p/t2pin.tmp
+include vfclust/Makefile
+
+#example files
+include vfclust/example/EXAMPLE.*
+include vfclust/example/EXAMPLE_sem.*
+
+#Misc
 include CHANGES.txt
 include LICENSE.txt
-include data/*
+include README
+
+## Testing
+include vfclust/test/__init__.py
+
 ## When adding in the app:
 # include vfclust_app 
 # include requirements.txt
+

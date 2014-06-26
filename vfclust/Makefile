@@ -27,7 +27,7 @@ t2p1:
 #	cp t2p/t2p bin/t2p
 
 clean:
-	rm t2p/t2p
+	rm -f t2p/t2p
 
 test:
 	t2p/t2p -transcribe data/cmudict.0.7a.tree data/t2pin.tmp
