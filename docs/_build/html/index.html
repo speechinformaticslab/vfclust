@@ -127,6 +127,12 @@ input Unit objects.</p>
 </dd>
 </dl>
 </li>
+<li><dl class="first docutils">
+<dt><strong>SEMANTIC/&#8221;custom&#8221;</strong>: the user can specify a custom file of word similarities,</dt>
+<dd><p class="first last">in which each pair of words is given a custom similarity score.</p>
+</dd>
+</dl>
+</li>
 </ul>
 <div class="section" id="output">
 <h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
@@ -416,46 +422,65 @@ Any entry that is not one of these and does not fit into the specified clusterin
 <div class="section" id="as-a-script">
 <h3><em>As a script</em><a class="headerlink" href="#as-a-script" title="Permalink to this headline">¶</a></h3>
 <p>After installation, you should be able to use vfclust from the command line simply by typing:</p>
-<div class="highlight-python"><div class="highlight"><pre>vfclust [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q] source_file_path
+<div class="highlight-python"><div class="highlight"><pre>vfclust [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q]
+              [--similarity-file SIMILARITY_FILE] [--threshold THRESHOLD]
+              source_file_path
 </pre></div>
 </div>
 <p>with the relevant parameters.</p>
 <p>If for some reason this doesn&#8217;t work, you can navigate to the directory containing the vfclust.py file (it should be
 in the vfclust/ subdirectory of the installed package) and type:</p>
-<div class="highlight-python"><div class="highlight"><pre>python vfclust.py [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q] source_file_path
+<div class="highlight-python"><div class="highlight"><pre>python vfclust.py [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q]
+              [--similarity-file SIMILARITY_FILE] [--threshold THRESHOLD]
+              source_file_path
 </pre></div>
 </div>
 <p>Bracketed arguments are optional, but either -s (semantic) or -p
 (phonemic) must be selected. The arguments are as follows:</p>
 <div class="highlight-python"><div class="highlight"><pre>positional arguments:
-    source_file_path    Full path of textgrid or csv file to parse
+  source_file_path      Full path of textgrid or csv file to parse
 
 optional arguments:
-
--h, --help      show this help message and exit
-
--s SEMANTIC     Usage: -s animals If included, calculates measures for the
-                given category for the semantic fluency test, i.e.
-                animals, fruits, etc.
-
--p PHONEMIC     Usage: -p f If included, calculates measures for the given
-                category for the phonemic fluency test, i.e. a, f, s, etc.
-
--o OUTPUT_PATH  Where to put output - default is the same directory as the
-                input file working directory.
-
--q              Use to eliminate output to screen (default is print everything to
-                stdout).
+  -h, --help            show this help message and exit
+  -s SEMANTIC           Usage: -s animals If included, calculates measures for
+                        the given category for the semantic fluency test, i.e.
+                        animals, fruits, etc.
+  -p PHONEMIC           Usage: -p f If included, calculates measures for the
+                        given category for the phonemic fluency test, i.e. a,
+                        f, s, etc.
+  -o OUTPUT_PATH        Where to put output - default is the same directory as
+                        the input file working directory.
+  -q                    Use to eliminate output (default is print everything
+                        to stdout).
+  --similarity-file SIMILARITY_FILE
+                        Usage: --similarity-file /path/to/similarity/file
+                        Location of custom word similarity file. Each line
+                        must contain two words separated by a space, followed
+                        by a comma and the similarity number. For example,
+                        &quot;horse dog,1344.3969&quot; is a valid line. If used, the
+                        default &quot;LSA&quot; option is overridden. You must also
+                        include a threshold number with --threshold X.
+  --threshold THRESHOLD
+                        Usage: --threshold X, where X is a number. A custom
+                        threshold is required when including a custom
+                        similarity file. A custom threshold can also be set
+                        when using semantic or phonemic clustering. In this
+                        case, it would override the default threshold
+                        implemented in the program.
 </pre></div>
 </div>
-<p>For example, to run clustering on a phonetic verbal fluency test using the letter &#8220;a&#8221;,
+<p>For example, to run clustering on a phonetic verbal fluency test using the letter &#8220;f&#8221;,
 where the response was saved as a .csv file, type:</p>
-<div class="highlight-python"><div class="highlight"><pre>vfclust /path/to/response/response.csv -p a
+<div class="highlight-python"><div class="highlight"><pre>vfclust  -p f /path/to/response/response.csv
 </pre></div>
 </div>
 <p>Similarly, to run clustering on a semantic verbal fluency test using the category
 &#8220;animals&#8221;, where the response is recorded as a .TextGrid file, type</p>
-<div class="highlight-python"><div class="highlight"><pre>vfclust /path/to/response/response.TextGrid -s animals
+<div class="highlight-python"><div class="highlight"><pre>vfclust  -s animals /path/to/response/response.TextGrid
+</pre></div>
+</div>
+<p>To use a custom similarity file, type something like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>python vfclust.py --similarity-file path/to/similarity/file.txt --threshold 0.5 /path/to/response/response.TextGrid
 </pre></div>
 </div>
 <p>By default, the results are printed to screen and a .csv file is created in the same
@@ -476,6 +501,14 @@ method. The method inputs are as follows:</p>
 :param semantic: The word category used for semantic clustering. Note: should be
     False if phonetic clustering is being used.
 :param quiet: Set to True if you want to suppress output to the screen during processing.
+:param similarity_file (optional): When doing semantic processing, this is the path of
+    a file containing custom term similarity scores that will be used for clustering.
+    If a custom file is used, the default LSA-based clustering will not be performed.
+:param threshold (optional): When doing semantic processing, this threshold is used
+    in conjunction with a custom similarity file. The value is used as a semantic
+    similarity cutoff in clustering. This argument is required if a custom similarity
+    file is specified.  This argument can also be used to override the built-in
+    cluster/chain thresholds.
 
 :return data: A dictionary of measures derived by clustering the input response.
 </pre></div>
@@ -490,9 +523,25 @@ method. The method inputs are as follows:</p>
 <p>If you enter invalid arguments or both the &#8220;phonemic&#8221; and &#8220;semantic&#8221; arguments, an exception
 will be raised.</p>
 </div>
+<div class="section" id="using-a-custom-similarity-file">
+<h3><em>Using a custom similarity file</em><a class="headerlink" href="#using-a-custom-similarity-file" title="Permalink to this headline">¶</a></h3>
+<p>You can also specify word similarities using a separate file.  If this is done, words in the
+response will be counted as &#8220;permissible&#8221; and as legitimate members of clusters only if they
+appear somewhere in this file. VFClust will also assume all words in the  file are already
+tokenized, i.e. &#8220;polar bear&#8221; should be written as &#8220;polar_bear&#8221;.</p>
+<p>Each line of the file must be formatted with two words separated by a space, followed by a comma and
+a number:</p>
+<div class="highlight-python"><div class="highlight"><pre>elk bison,114.9277
+guinea_pig mouse,113.2803
+panther puma,112.4150
+cat skunk,112.2775
+cardinal finch,111.5717
+squirrel elephant,111.2780
+</pre></div>
 </div>
-<div class="section" id="contributing-changes">
-<h2>Contributing changes<a class="headerlink" href="#contributing-changes" title="Permalink to this headline">¶</a></h2>
+<p>When using a custom similarity file, you must also explicitly specify a custom threshold using the
+&#8211;threshold argument.</p>
+</div>
 </div>
 <div class="section" id="acknowledgements">
 <h2>ACKNOWLEDGEMENTS<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
@@ -500,14 +549,16 @@ will be raised.</p>
 by the MBRDICO Project (<a class="reference external" href="http://tcts.fpms.ac.be/synthesis/mbrdico/">http://tcts.fpms.ac.be/synthesis/mbrdico/</a>).</p>
 <p>The English Open Word List is used as a basic dictionary of English
 words. <a class="reference external" href="http://dreamsteep.com/projects/the-english-open-word-list.html">http://dreamsteep.com/projects/the-english-open-word-list.html</a></p>
+<p>The NLTK (<a class="reference external" href="http://www.nltk.org">http://www.nltk.org</a>) WordNet 3.0 Corpus is used for lemmatizing words.</p>
 </div>
 <div class="section" id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
 <p>All files which are included as a part of the VFClust Phonetic
 Clustering Module are provided under an Apache license, excluding:</p>
 <ul class="simple">
-<li>t2p.c in the src directory, which is provided under a GPL license,
-and</li>
+<li>t2p.c in the data/t2p directory, which is provided under a GPL license</li>
+<li>the NLTK WordNet 3.0 corpus, which is Copyright 2006 by Princeton University.
+The full text of the license is available in the corpus files.</li>
 <li>english_words.txt in the data/EOWL directory, which is a
 modification of the UK Advanced Cryptics Dictionary and is released
 with the following licensing:</li>
@@ -517,11 +568,6 @@ following restriction is placed on the use of this publication: if the
 UK Advanced Cryptics Dictionary is used in a software package or
 redistributed in any form, the copyright notice must be prominently
 displayed and the text of this document must be included verbatim.</p>
-<span class="target" id="module-vfclust"></span><p>To setup (from terminal):
-$ cd /path/to/vfclust/download
-$ python setup.py install</p>
-<p>&gt;&gt; import vfclust</p>
-<p>For arguments and default values, see the README.md file.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
@@ -558,9 +604,9 @@ $ python setup.py install</p>
 <li><a class="reference internal" href="#input"><em>Input</em></a></li>
 <li><a class="reference internal" href="#as-a-script"><em>As a script</em></a></li>
 <li><a class="reference internal" href="#as-a-python-package"><em>As a Python package</em></a></li>
+<li><a class="reference internal" href="#using-a-custom-similarity-file"><em>Using a custom similarity file</em></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#contributing-changes">Contributing changes</a></li>
 <li><a class="reference internal" href="#acknowledgements">ACKNOWLEDGEMENTS</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
 </ul>

@@ -71,6 +71,9 @@ The similarity measures used are the following:
    the PHONETIC methods, this method uses the .text property of the
    input Unit objects.
 
+- **SEMANTIC/"custom"**: the user can specify a custom file of word similarities,
+   in which each pair of words is given a custom similarity score.
+
 Output
 ~~~~~~
 
@@ -334,7 +337,9 @@ After installation, you should be able to use vfclust from the command line simp
 
 ::
 
-    vfclust [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q] source_file_path
+    vfclust [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q]
+                  [--similarity-file SIMILARITY_FILE] [--threshold THRESHOLD]
+                  source_file_path
 
 with the relevant parameters.
 
@@ -343,7 +348,9 @@ in the vfclust/ subdirectory of the installed package) and type:
 
 ::
 
-    python vfclust.py [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q] source_file_path
+    python vfclust.py [-h] [-s SEMANTIC] [-p PHONEMIC] [-o OUTPUT_PATH] [-q]
+                  [--similarity-file SIMILARITY_FILE] [--threshold THRESHOLD]
+                  source_file_path
 
 Bracketed arguments are optional, but either -s (semantic) or -p
 (phonemic) must be selected. The arguments are as follows:
@@ -351,43 +358,61 @@ Bracketed arguments are optional, but either -s (semantic) or -p
 ::
 
     positional arguments:
-        source_file_path    Full path of textgrid or csv file to parse
+      source_file_path      Full path of textgrid or csv file to parse
 
     optional arguments:
+      -h, --help            show this help message and exit
+      -s SEMANTIC           Usage: -s animals If included, calculates measures for
+                            the given category for the semantic fluency test, i.e.
+                            animals, fruits, etc.
+      -p PHONEMIC           Usage: -p f If included, calculates measures for the
+                            given category for the phonemic fluency test, i.e. a,
+                            f, s, etc.
+      -o OUTPUT_PATH        Where to put output - default is the same directory as
+                            the input file working directory.
+      -q                    Use to eliminate output (default is print everything
+                            to stdout).
+      --similarity-file SIMILARITY_FILE
+                            Usage: --similarity-file /path/to/similarity/file
+                            Location of custom word similarity file. Each line
+                            must contain two words separated by a space, followed
+                            by a comma and the similarity number. For example,
+                            "horse dog,1344.3969" is a valid line. If used, the
+                            default "LSA" option is overridden. You must also
+                            include a threshold number with --threshold X.
+      --threshold THRESHOLD
+                            Usage: --threshold X, where X is a number. A custom
+                            threshold is required when including a custom
+                            similarity file. A custom threshold can also be set
+                            when using semantic or phonemic clustering. In this
+                            case, it would override the default threshold
+                            implemented in the program.
 
-    -h, --help      show this help message and exit
-
-    -s SEMANTIC     Usage: -s animals If included, calculates measures for the
-                    given category for the semantic fluency test, i.e.
-                    animals, fruits, etc.
-
-    -p PHONEMIC     Usage: -p f If included, calculates measures for the given
-                    category for the phonemic fluency test, i.e. a, f, s, etc.
-
-    -o OUTPUT_PATH  Where to put output - default is the same directory as the
-                    input file working directory.
-
-    -q              Use to eliminate output to screen (default is print everything to
-                    stdout).
-
-For example, to run clustering on a phonetic verbal fluency test using the letter "a",
+For example, to run clustering on a phonetic verbal fluency test using the letter "f",
 where the response was saved as a .csv file, type:
 
 ::
 
-    vfclust /path/to/response/response.csv -p a
+    vfclust  -p f /path/to/response/response.csv
 
 Similarly, to run clustering on a semantic verbal fluency test using the category
 "animals", where the response is recorded as a .TextGrid file, type
 
 ::
 
-    vfclust /path/to/response/response.TextGrid -s animals
+    vfclust  -s animals /path/to/response/response.TextGrid
 
+
+To use a custom similarity file, type something like the following:
+
+::
+
+    python vfclust.py --similarity-file path/to/similarity/file.txt --threshold 0.5 /path/to/response/response.TextGrid
 
 By default, the results are printed to screen and a .csv file is created in the same
 directory as the response.csv file.  You can output the results to a different directory
 by using the -o flag.
+
 
 
 *As a Python package*
@@ -408,6 +433,14 @@ method. The method inputs are as follows:
     :param semantic: The word category used for semantic clustering. Note: should be
         False if phonetic clustering is being used.
     :param quiet: Set to True if you want to suppress output to the screen during processing.
+    :param similarity_file (optional): When doing semantic processing, this is the path of
+        a file containing custom term similarity scores that will be used for clustering.
+        If a custom file is used, the default LSA-based clustering will not be performed.
+    :param threshold (optional): When doing semantic processing, this threshold is used
+        in conjunction with a custom similarity file. The value is used as a semantic
+        similarity cutoff in clustering. This argument is required if a custom similarity
+        file is specified.  This argument can also be used to override the built-in
+        cluster/chain thresholds.
 
     :return data: A dictionary of measures derived by clustering the input response.
 
@@ -423,9 +456,29 @@ and can be called by typing
 If you enter invalid arguments or both the "phonemic" and "semantic" arguments, an exception
 will be raised.
 
+*Using a custom similarity file*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Contributing changes
---------------------
+You can also specify word similarities using a separate file.  If this is done, words in the
+response will be counted as "permissible" and as legitimate members of clusters only if they
+appear somewhere in this file. VFClust will also assume all words in the  file are already
+tokenized, i.e. "polar bear" should be written as "polar_bear".
+
+Each line of the file must be formatted with two words separated by a space, followed by a comma and
+a number:
+
+::
+
+    elk bison,114.9277
+    guinea_pig mouse,113.2803
+    panther puma,112.4150
+    cat skunk,112.2775
+    cardinal finch,111.5717
+    squirrel elephant,111.2780
+
+When using a custom similarity file, you must also explicitly specify a custom threshold using the
+--threshold argument.
+
 
 
 ACKNOWLEDGEMENTS
@@ -437,14 +490,18 @@ by the MBRDICO Project (http://tcts.fpms.ac.be/synthesis/mbrdico/).
 The English Open Word List is used as a basic dictionary of English
 words. http://dreamsteep.com/projects/the-english-open-word-list.html
 
+The NLTK (http://www.nltk.org) WordNet 3.0 Corpus is used for lemmatizing words.
+
 License
 -------
 
 All files which are included as a part of the VFClust Phonetic
 Clustering Module are provided under an Apache license, excluding:
 
--  t2p.c in the src directory, which is provided under a GPL license,
-   and
+-  t2p.c in the data/t2p directory, which is provided under a GPL license
+
+- the NLTK WordNet 3.0 corpus, which is Copyright 2006 by Princeton University.
+  The full text of the license is available in the corpus files.
 
 -  english\_words.txt in the data/EOWL directory, which is a
    modification of the UK Advanced Cryptics Dictionary and is released

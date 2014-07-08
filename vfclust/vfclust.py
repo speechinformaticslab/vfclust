@@ -3,8 +3,9 @@ The VFClust package is designed to generate clustering analyses for transcriptio
 
 Run with:
 source /Volumes/Data/virtualenv/vfclust/bin/activate
-python vfclust.py --similarity-file example/similarlity.txt --threshold 1 -s animals example/EXAMPLE_sem.TextGrid
-"""
+python vfclust.py --similarity-file data/similarity/similarity_rand.txt --threshold 0.5 example/EXAMPLE_sem_custom.TextGrid
+python vfclust.py --threshold .99 -p s example/EXAMPLE.TextGrid
+ """
 from __future__ import division  # makes / do floating point division
 import os, re, subprocess, csv, argparse, sys
 import cPickle as pickle  # faster for the LSA part
@@ -581,7 +582,7 @@ class VFClustEngine(object):
         .. note:: At this point, the only category of semantic clustering available is "animals."
 
     """
-        self.valid_semantic_categories = ['animals']
+        self.valid_semantic_categories = ['animals', 'custom']
         self.valid_phonetic_categories = ['a', 'f', 's', 'p']
         self.valid_semantic_measures = ['lsa']
         self.valid_phonemic_measures = ['phone', 'biphone']
@@ -639,6 +640,13 @@ class VFClustEngine(object):
 
         #load supporting data
         if not self.quiet: print
+
+        #custom threshold can be set no matter the similarity measure used
+        if threshold:
+            self.custom_threshold = threshold
+        else:
+            self.custom_threshold = None
+
         if self.type == "PHONETIC":
             self.names = None
             self.lemmas = None
@@ -649,38 +657,42 @@ class VFClustEngine(object):
         elif self.type == "SEMANTIC":
             self.cmudict = None
             self.english_words = None
-            if not self.quiet:
-                print "Loading lemmas..."
-            self.lemmas = pickle.load(open(os.path.join(data_path, self.category + '_lemmas.dat'), 'rb'))
-            if not self.quiet:
-                print "Loading tokenized responses..."
-            self.names = pickle.load(open(os.path.join(data_path, self.category + '_names_raw.dat'), 'rb'))
-            if not self.quiet:
-                print "Loading list of permissible words..."
-            with open(os.path.join(data_path, self.category + '_names.dat'), 'rb') as infile:
-                self.permissible_words = pickle.load(infile)
 
+            if self.category == 'animals':
+                if not self.quiet:
+                    print "Loading tokenized responses..."
+                self.names = pickle.load(open(os.path.join(data_path, self.category + '_names_raw.dat'), 'rb'))
+                if not self.quiet:
+                    print "Loading list of permissible words..."
+                with open(os.path.join(data_path, self.category + '_names.dat'), 'rb') as infile:
+                    self.permissible_words = pickle.load(infile)
+            elif self.category == 'custom':
 
-        #read custom similarity file
-        if similarity_file:
-            self.similarity_measures = ["custom"] # Don't include LSA if custom similarity file is specified
-            self.custom_similarity_file = open(similarity_file, 'r').readlines()
-            # create a dict of tuples
-            self.custom_similarity_scores = {}
-            for entry in self.custom_similarity_file:
-                temp = entry.split(",")
-                words_split = temp[0].split(" ")
-                self.custom_similarity_scores[(words_split[0],words_split[1])] = float(temp[1])
+                #read custom similarity file
+                self.similarity_measures = ["custom"] # Don't include LSA if custom similarity file is specified
+                self.custom_similarity_file = open(similarity_file, 'r').readlines()
+                # create a dict of tuples
+                self.custom_similarity_scores = {}
+                for entry in self.custom_similarity_file:
+                    temp = entry.split(",")
+                    words_split = temp[0].split(" ")
+                    self.custom_similarity_scores[(words_split[0],words_split[1])] = float(temp[1])
 
-            #print "DEBUG",self.custom_similarity_file, self.custom_similarity_scores
-            self.custom_threshold = threshold
+                #if using a custom file, make a new permissible words list
+                self.permissible_words = []
+                for w1, w2 in self.custom_similarity_scores:
+                    self.permissible_words.append(w1)
+                    self.permissible_words.append(w2)
+                #get rid of repeats
+                self.permissible_words = list(set(self.permissible_words))
 
-            #if using a custom file, make a new permissible words list
-            self.permissible_words = []
-            for w1, w2 in self.custom_similarity_scores:
-                self.permissible_words.append(w1)
-                self.permissible_words.append(w2)
-            #print "DEBUGpermissible_words",self.permissible_words
+                self.names = self.permissible_words[:] #assume word list is already tokenized
+
+            #create lemmas
+            self.lemmas = []
+            for w in self.permissible_words:
+                self.lemmas.append(lemmatizer.lemmatize(w))
+            self.lemmas = set(self.lemmas)
 
         if "lsa" in self.similarity_measures:
             self.load_lsa_information()
@@ -1086,7 +1098,9 @@ class VFClustEngine(object):
 
         .. todo: Find source for thresholding values.
         """
-        if self.type == "PHONETIC":
+        if self.custom_threshold:
+            self.similarity_threshold = self.custom_threshold
+        elif self.type == "PHONETIC":
             if self.current_similarity_measure == "phone":
                 phonetic_similarity_thresholds = {'a': 0.222222222222,
                                                   'b': 0.3,
@@ -1149,7 +1163,7 @@ class VFClustEngine(object):
                                   '100': 0.135307208304}
 
                     self.similarity_threshold = thresholds[str(self.clustering_parameter)]
-            elif self.current_collection_type == "custom":
+            elif self.current_similarity_measure == "custom":
                 self.similarity_threshold = self.custom_threshold
 
         if not self.quiet:
@@ -1244,7 +1258,7 @@ class VFClustEngine(object):
         all_scores = [i for i in all_scores if i != self.same_word_similarity]
         self.measures["COLLECTION_" + self.current_similarity_measure + "_pairwise_similarity_score_mean"] = get_mean(
             all_scores) \
-            if len(pairs) > 0 else 'na'
+            if len(pairs) > 0 else 'NA'
 
 
     def compute_collection_measures(self, no_singletons=False):
@@ -1329,7 +1343,7 @@ class VFClustEngine(object):
                         durations.append(phone.end - phone.start)
 
         self.measures[prefix + 'response_vowel_duration_mean'] = get_mean(durations) \
-            if len(durations) > 0 else 'na'
+            if len(durations) > 0 else 'NA'
 
         if not self.quiet:
             print "Mean response vowel duration:", self.measures[prefix + 'response_vowel_duration_mean']
@@ -1352,7 +1366,7 @@ class VFClustEngine(object):
                         durations.append(phone.end - phone.start)
 
         self.measures[prefix + 'response_continuant_duration_mean'] = get_mean(durations) \
-            if len(durations) > 0 else 'na'
+            if len(durations) > 0 else 'NA'
 
         if not self.quiet:
             print "Mean response continuant duration:", self.measures[prefix + 'response_continuant_duration_mean']
@@ -1397,7 +1411,7 @@ class VFClustEngine(object):
                 interstices[i] = 0
 
         self.measures[prefix + 'between_collection_interval_duration_mean'] = get_mean(interstices) \
-            if len(interstices) > 0 else 'na'
+            if len(interstices) > 0 else 'NA'
 
         if not self.quiet:
             print
@@ -1436,7 +1450,7 @@ class VFClustEngine(object):
                         interstices.append(interstice)
 
         self.measures[prefix + 'within_collection_interval_duration_mean'] = get_mean(interstices) \
-            if len(interstices) > 0 else 'na'
+            if len(interstices) > 0 else 'NA'
 
         if not self.quiet:
             print "Mean within-" + self.current_similarity_measure + "-" + self.current_collection_type + \
@@ -1471,7 +1485,7 @@ class VFClustEngine(object):
                             durations.append(phone.end - phone.start)
 
         self.measures[prefix + 'within_collection_vowel_duration_mean'] = get_mean(durations) \
-            if len(durations) > 0 else 'na'
+            if len(durations) > 0 else 'NA'
 
         if not self.quiet:
             if no_singletons:
@@ -1510,7 +1524,7 @@ class VFClustEngine(object):
                             durations.append(phone.end - phone.start)
 
         self.measures[prefix + 'within_collection_continuant_duration_mean'] = get_mean(durations) \
-            if len(durations) > 0 else 'na'
+            if len(durations) > 0 else 'NA'
 
         if not self.quiet:
             if no_singletons:
@@ -1602,10 +1616,11 @@ def get_duration_measures(source_file_path,
     :param similarity_file (optional): When doing semantic processing, this is the path of
         a file containing custom term similarity scores that will be used for clustering.
         If a custom file is used, the default LSA-based clustering will not be performed.
-    :param threshold (opitonal): When doing semantic processing, this threshold is used
+    :param threshold (optional): When doing semantic processing, this threshold is used
         in conjunction with a custom similarity file. The value is used as a semantic
         similarity cutoff in clustering. This argument is required if a custom similarity
-        file is specified.
+        file is specified.  This argument can also be used to override the built-in
+        cluster/chain thresholds.
 
     :return data: A dictionary of measures derived by clustering the input response.
 
@@ -1654,13 +1669,26 @@ def get_duration_measures(source_file_path,
 def validate_arguments(args):
     """Makes sure arguments are valid, specified files exist, etc."""
 
-    semantic_tests = ["animals"]
-    phonemic_tests = ["a", "p", "s", "f"]
     #check arguments
     print
     print "Checking input...",
+
+    semantic_tests = ["animals", "custom"]
+    phonemic_tests = ["a", "p", "s", "f"]
+    if args.similarity_file:
+        print
+        print "Custom similarity file was specified..."
+        args.semantic = "custom"
+
+    if args.threshold:
+        try:
+            args.threshold = float(args.threshold)
+        except ValueError:
+            raise VFClustException('Custom threshold (--threshold argument) must be a number.')
+
+
     if not (args.source_file_path.lower().endswith('csv') or args.source_file_path.lower().endswith('textgrid')):
-        raise VFClustException('The input must be either a .TextGrid or .csv file!')
+        raise VFClustException('The input must be either a .TextGrid or .csv file!\nYou provided ' + args.source_file_path.lower())
     if not os.path.isfile(args.source_file_path):
         raise VFClustException('The input file path you provided does not exist on your system!')
 
@@ -1690,8 +1718,10 @@ def validate_arguments(args):
 
     #must choose either semantic or phonemic
     if not (args.semantic or args.phonemic):
+        print "DEBUG", args.semantic, args.similarity_file
         raise VFClustException(
-            "You must specify at least one phonemic or semantic test to run using -p or -s, followed by the test type.")
+            '''You must specify at least one phonemic or semantic test to run using -p or -s, followed by the test type.
+            Alternatively, provide a custom similarity file using the --similarity-file and --threshold options.''')
 
     #make sure semantic arguments are legit
     if args.semantic and args.semantic not in semantic_tests:
@@ -1701,6 +1731,7 @@ def validate_arguments(args):
     if args.phonemic and args.phonemic not in phonemic_tests:
         raise VFClustException("Currently only " + ",".join(phonemic_tests) + " are supported for phonemic testing.  " \
                                                        "You provided " + args.phonemic)
+
 
     if (args.phonemic and args.semantic):
         raise VFClustException("You must choose EITHER semantic OR phonemic clustering.")
@@ -1762,14 +1793,18 @@ def main(test=False):
 
         parser.add_argument('--similarity-file', dest='similarity_file',default=None,
                    help='''Usage: --similarity-file /path/to/similarity/file\n
-                        Location of custom word similarity file.
+                        Location of custom word similarity file.  Each line must contain
+                        two words separated by a space, followed by a comma and the similarity number.\n
+                        For example, "horse dog,1344.3969" is a valid line.
                         If used, the default "LSA" option is overridden.
                         You must also include a threshold number with
-                        --threshold X''')
+                        --threshold X.  ''')
 
         parser.add_argument('--threshold',dest='threshold',default=None,
                             help='''Usage: --threshold X, where X is a number.
-                                    A custom threshold is required when including a custom similarity file.''')
+                                    A custom threshold is required when including a custom similarity file.
+                                    A custom threshold can also be set when using semantic or phonemic clustering.
+                                    In this case, it would override the default threshold implemented in the program.''')
 
         args = parser.parse_args()
 
@@ -1786,7 +1821,7 @@ def test_script():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),'example'))
     example_csv = os.path.join(path,'EXAMPLE.csv')
     example_textgrid = os.path.join(path,'EXAMPLE_sem.TextGrid')
-
+    example_textgrid_custom = os.path.join(path,'EXAMPLE_sem_custom.TextGrid')
     print example_csv
     print example_textgrid
 
@@ -1796,10 +1831,9 @@ def test_script():
     results_textgrid = get_duration_measures(source_file_path = example_textgrid,
                                                 output_path=False,
                                                 semantic='animals')
-    results_textgrid_custom = get_duration_measures(source_file_path = example_textgrid,
+    results_textgrid_custom = get_duration_measures(source_file_path = example_textgrid_custom,
                                                 output_path=False,
-                                                semantic='animals',
-                                                similarity_file = os.path.abspath(os.path.join(os.path.dirname(__file__),'data/similarity/similarity.txt')),
+                                                similarity_file = os.path.abspath(os.path.join(os.path.dirname(__file__),'data','similarity','similarity_rand.txt')),
                                                 threshold = 0.5)
 
     print "TEST FINISHED SUCCESSFULLY"

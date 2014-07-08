@@ -127,7 +127,8 @@ setup(
             ['example/EXAMPLE.csv',
              'example/EXAMPLE.TextGrid',
              'example/EXAMPLE_sem.csv',
-             'example/EXAMPLE_sem.TextGrid'],
+             'example/EXAMPLE_sem.TextGrid',
+             'example/EXAMPLE_sem_custom.TextGrid'],
         't2p':
             ['t2p/t2p.c',
              't2p/t2pin.tmp'

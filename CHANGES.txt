@@ -1,2 +1,6 @@
+v0.1.1, 7/8/14
+    -- Bug fixes.
+    -- Added ability to specify custom similarity file for semantic clustering.
+    -- Added ability to specify custom similarity threshold for phonemic/semantic clustering, which overrides the default
+    -- updated README
 v0.1.0, 6/25/2014 -- Initial release.
-v0.1.0, 7/8/14 -- Bug fixes. Added ability to specify custom similarity file for semantic clustering.

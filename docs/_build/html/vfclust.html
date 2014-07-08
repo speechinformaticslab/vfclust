@@ -96,6 +96,10 @@ end times are subsumed by the start and end times of the word.)</p>
 <div class="section" id="module-vfclust.vfclust">
 <span id="vfclust-vfclust-module"></span><h2>vfclust.vfclust module<a class="headerlink" href="#module-vfclust.vfclust" title="Permalink to this headline">¶</a></h2>
 <p>The VFClust package is designed to generate clustering analyses for transcriptions of semantic and phonemic verbal fluency test responses. In a verbal fluency test, the subject is given a set amount of time (usually 60 seconds) to name as many words as he or she can that correspond to a given specification. For a phonemic test, subjects are asked to name words that begin with a specific letter. For a semantic fluency test, subjects are asked to provide words of a certain category, e.g. animals.  VFClust groups words in responses based on phonemic or semantic similarity, as described below. It then calculates metrics derived from the discovered groups and returns them as a CSV file or Python dict.</p>
+<p>Run with:
+source /Volumes/Data/virtualenv/vfclust/bin/activate
+python vfclust.py &#8211;similarity-file data/similarity/similarity_rand.txt &#8211;threshold 0.5 example/EXAMPLE_sem_custom.TextGrid
+python vfclust.py &#8211;threshold .99 -p s example/EXAMPLE.TextGrid</p>
 <dl class="class">
 <dt id="vfclust.vfclust.Args">
 <em class="property">class </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">Args</tt><a class="headerlink" href="#vfclust.vfclust.Args" title="Permalink to this definition">¶</a></dt>
@@ -398,7 +402,7 @@ a respective single token.</p>
 
 <dl class="class">
 <dt id="vfclust.vfclust.VFClustEngine">
-<em class="property">class </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">VFClustEngine</tt><big>(</big><em>response_category, response_file_path, target_file_path=None, collection_types=['cluster', 'chain'], similarity_measures=['phone', 'biphone', 'lsa'], clustering_parameter=91, quiet=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">VFClustEngine</tt><big>(</big><em>response_category, response_file_path, target_file_path=None, collection_types=['cluster', 'chain'], similarity_measures=['phone', 'biphone', 'lsa'], clustering_parameter=91, quiet=False, similarity_file=None, threshold=None</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Class used for encapsulating clustering methods and data.</p>
 <dl class="method">
@@ -859,7 +863,7 @@ for phonetic and semantic fluency test, respectively.</p>
 
 <dl class="function">
 <dt id="vfclust.vfclust.get_duration_measures">
-<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">get_duration_measures</tt><big>(</big><em>source_file_path</em>, <em>output_path=None</em>, <em>phonemic=False</em>, <em>semantic=False</em>, <em>quiet=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.get_duration_measures" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">get_duration_measures</tt><big>(</big><em>source_file_path</em>, <em>output_path=None</em>, <em>phonemic=False</em>, <em>semantic=False</em>, <em>quiet=False</em>, <em>similarity_file=None</em>, <em>threshold=None</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.get_duration_measures" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses input arguments and runs clustering algorithm.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -876,6 +880,14 @@ semantic clustering is being used.</li>
 <li><strong>semantic</strong> &#8211; The word category used for semantic clustering. Note: should be
 False if phonetic clustering is being used.</li>
 <li><strong>quiet</strong> &#8211; Set to True if you want to suppress output to the screen during processing.</li>
+<li><strong>(optional)</strong> (<em>threshold</em>) &#8211; When doing semantic processing, this is the path of
+a file containing custom term similarity scores that will be used for clustering.
+If a custom file is used, the default LSA-based clustering will not be performed.</li>
+<li><strong>(optional)</strong> &#8211; When doing semantic processing, this threshold is used
+in conjunction with a custom similarity file. The value is used as a semantic
+similarity cutoff in clustering. This argument is required if a custom similarity
+file is specified.  This argument can also be used to override the built-in
+cluster/chain thresholds.</li>
 </ul>
 </td>
 </tr>

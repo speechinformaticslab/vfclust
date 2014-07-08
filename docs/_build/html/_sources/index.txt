@@ -9,8 +9,6 @@ Welcome to VFClust's documentation!
 
 .. include:: ../README
 
-.. automodule:: vfclust
-
 Contents:
 
 .. toctree::
