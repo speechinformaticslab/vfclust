@@ -10,7 +10,6 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README'), encoding='utf-8') as f:
     long_description = f.read()
 
-print here, path.join(here,'vfclust')
 #see http://www.niteoweb.com/blog/setuptools-run-custom-code-during-install
 #This is so we can call "make" automatically during setup
 class MyInstall(install):
@@ -30,7 +29,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='0.1.0',
+    version='0.1.1',
 
     description='Clustering of Verbal Fluency responses.',
     long_description=long_description,
@@ -77,7 +76,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages = find_packages(exclude=['build', 'docs', 'templates']),
+    packages = find_packages(exclude=['build', '_docs', 'templates']),
     #package_dir={'vfclust': 'vfclust'},
 
     # List run-time dependencies here.  These will be installed by pip when your
@@ -102,6 +101,23 @@ setup(
              'data/modified_cmudict.dat',
              'data/animals_term_vector_dictionaries/term_vectors_dict91_cpickle.dat',
              ],
+        'data/nltk_data/corpora/wordnet':[
+            'data/nltk_data/corpora/wordnet/adj.exc',
+            'data/nltk_data/corpora/wordnet/cntlist.rev',
+            'data/nltk_data/corpora/wordnet/data.adv',
+            'data/nltk_data/corpora/wordnet/data.verb',
+            'data/nltk_data/corpora/wordnet/index.adv',
+            'data/nltk_data/corpora/wordnet/index.sense',
+            'data/nltk_data/corpora/wordnet/lexnames',
+            'data/nltk_data/corpora/wordnet/verb.exc',
+            'data/nltk_data/corpora/wordnet/adv.exc',
+            'data/nltk_data/corpora/wordnet/data.adj',
+            'data/nltk_data/corpora/wordnet/data.noun',
+            'data/nltk_data/corpora/wordnet/index.adj',
+            'data/nltk_data/corpora/wordnet/index.noun',
+            'data/nltk_data/corpora/wordnet/index.verb',
+            'data/nltk_data/corpora/wordnet/noun.exc'
+            ],
         'data/EOWL':
             ['data/EOWL/english_words.txt',
              'data/EOWL/EOWL Version Notes.txt',
@@ -122,8 +138,8 @@ setup(
     #          'LICENSE.txt',
     #          'Makefile',
     #          'README',
-    #          'docs/_build/html/*.html',
-    #           'docs/_build/html/_static/*.*',
+    #          '_docs/_build/html/*.html',
+    #           '_docs/_build/html/_static/*.*',
     #           'data/animals_lemmas.dat',
     #          'data/animals_names.dat',
     #          'data/animals_names_raw.dat',
@@ -147,7 +163,7 @@ setup(
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages.
-    # see http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
+    # see http://_docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
     # data_files=[
     #     ('my_data',['data_file']),

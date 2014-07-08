@@ -1,5 +1,9 @@
 """
 The VFClust package is designed to generate clustering analyses for transcriptions of semantic and phonemic verbal fluency test responses. In a verbal fluency test, the subject is given a set amount of time (usually 60 seconds) to name as many words as he or she can that correspond to a given specification. For a phonemic test, subjects are asked to name words that begin with a specific letter. For a semantic fluency test, subjects are asked to provide words of a certain category, e.g. animals.  VFClust groups words in responses based on phonemic or semantic similarity, as described below. It then calculates metrics derived from the discovered groups and returns them as a CSV file or Python dict.
+
+Run with:
+source /Volumes/Data/virtualenv/vfclust/bin/activate
+python vfclust.py --similarity-file example/similarlity.txt --threshold 1 -s animals example/EXAMPLE_sem.TextGrid
 """
 from __future__ import division  # makes / do floating point division
 import os, re, subprocess, csv, argparse, sys
@@ -11,10 +15,12 @@ from TextGridParser import TextGrid
 
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import PorterStemmer
+import nltk
 lemmatizer = WordNetLemmatizer()
 stemmer = PorterStemmer()
 
 data_path = os.path.join(os.path.dirname(__file__), 'data/')
+nltk.data.path.append(os.path.join(data_path,'nltk_data/'))
 __docformat__ = "restructuredtext en"
 
 def print_table(table):
@@ -374,7 +380,6 @@ class ParsedResponse():
             t2pargs = [os.path.abspath(os.path.join(os.path.dirname(__file__),'t2p/t2p')),
                        '-transcribe', os.path.join(data_path, 'cmudict.0.7a.tree'),
                        temp_file.name]
-            print t2pargs
             temp_file.seek(0)
             output, error = subprocess.Popen(
                 t2pargs, stdout=subprocess.PIPE,
@@ -508,7 +513,9 @@ class VFClustEngine(object):
                  collection_types=["cluster", "chain"],
                  similarity_measures=["phone", "biphone", "lsa"],  #only the appropriate ones are run
                  clustering_parameter=91,  #for lsa
-                 quiet=False):
+                 quiet=False,
+                 similarity_file = None,
+                 threshold = None):
 
         """Initialize for VFClust analysis of a verbal phonetic or semantic fluency test response.
 
@@ -538,6 +545,14 @@ class VFClustEngine(object):
             for PHONETIC clustering.
         :param clustering_parameter: (optional) parameters to be used in clustering
         :param bool quiet: (optional) If set to True, suppresses output to screen.
+        :param similarity_file (optional): When doing semantic processing, this is the path of
+            a file containing custom term similarity scores that will be used for clustering.
+            If a custom file is used, the default LSA-based clustering will not be performed.
+        :param threshold (opitonal): When doing semantic processing, this threshold is used
+            in conjunction with a custom similarity file. The value is used as a semantic
+            similarity cutoff in clustering. This argument is required if a custom similarity
+            file is specified.
+
 
         The initialization of a VFClustEngine object performs the following:
             - parse input arguments
@@ -574,6 +589,9 @@ class VFClustEngine(object):
           'OW', 'OY', 'UH', 'UW']
         self.continuants = ['DH', 'F', 'L', 'M', 'N', 'NG', 'R', 'S', 'SH', 'TH', 'V',
                'Z', 'ZH']
+        #this is a positive number, not None, so that when clustering it's above the threshold and won't break clusters up.
+        # it's above a realistic similarity threshold and is removed when taking the mean
+        self.same_word_similarity = 999999999
 
         #parse input arguments
         self.quiet = quiet
@@ -598,7 +616,7 @@ class VFClustEngine(object):
         self.measures = defaultdict(int)
         # makes the default value 0 instead of KeyError but otherwise just like a dict
 
-        #read response file
+        #read subject response file
         if self.response_format not in ['csv', 'TextGrid']:
             raise VFClustException('Currently, VF-Clust only accepts responses in ' +
                                    'comma-separated (csv) or Praat TextGrid formats. ' +
@@ -642,9 +660,30 @@ class VFClustEngine(object):
             with open(os.path.join(data_path, self.category + '_names.dat'), 'rb') as infile:
                 self.permissible_words = pickle.load(infile)
 
-            if "lsa" in self.similarity_measures:
-                self.load_lsa_information()
 
+        #read custom similarity file
+        if similarity_file:
+            self.similarity_measures = ["custom"] # Don't include LSA if custom similarity file is specified
+            self.custom_similarity_file = open(similarity_file, 'r').readlines()
+            # create a dict of tuples
+            self.custom_similarity_scores = {}
+            for entry in self.custom_similarity_file:
+                temp = entry.split(",")
+                words_split = temp[0].split(" ")
+                self.custom_similarity_scores[(words_split[0],words_split[1])] = float(temp[1])
+
+            #print "DEBUG",self.custom_similarity_file, self.custom_similarity_scores
+            self.custom_threshold = threshold
+
+            #if using a custom file, make a new permissible words list
+            self.permissible_words = []
+            for w1, w2 in self.custom_similarity_scores:
+                self.permissible_words.append(w1)
+                self.permissible_words.append(w2)
+            #print "DEBUGpermissible_words",self.permissible_words
+
+        if "lsa" in self.similarity_measures:
+            self.load_lsa_information()
 
         # PARSING AND COUNTING
         # iterable, ordered collection of Units. Need to pass in information required for parsing.
@@ -972,6 +1011,22 @@ class VFClustEngine(object):
                 norm2 = sqrt(sum([w*w for w in w2_vec]))
                 semantic_relatedness_score =  dot/(norm1 * norm2)
                 return semantic_relatedness_score
+            elif self.current_similarity_measure == "custom":
+                #look it up in dict
+                try:
+                    similarity = self.custom_similarity_scores[(word1,word2)]
+                except KeyError:
+                    try:
+                        similarity = self.custom_similarity_scores[(word2,word1)]
+                    except KeyError:
+                        if word1 == word2:
+                            return self.same_word_similarity
+                            #if they're the same word, they pass.  This should only happen when checking with
+                            # non-adjacent words in the same cluster
+                        else:
+                            return 0 #if words aren't found, they are defined as dissimilar
+                return similarity
+
         return None  #shouldn't happen
 
     def compute_similarity_scores(self):
@@ -1094,6 +1149,8 @@ class VFClustEngine(object):
                                   '100': 0.135307208304}
 
                     self.similarity_threshold = thresholds[str(self.clustering_parameter)]
+            elif self.current_collection_type == "custom":
+                self.similarity_threshold = self.custom_threshold
 
         if not self.quiet:
             print "Similarity threshold:", self.similarity_threshold
@@ -1183,6 +1240,8 @@ class VFClustEngine(object):
                         pairs.append(rev_pair)
                         all_scores.append(score)
 
+        #remove any "same word" from the mean
+        all_scores = [i for i in all_scores if i != self.same_word_similarity]
         self.measures["COLLECTION_" + self.current_similarity_measure + "_pairwise_similarity_score_mean"] = get_mean(
             all_scores) \
             if len(pairs) > 0 else 'na'
@@ -1218,7 +1277,7 @@ class VFClustEngine(object):
             if self.measures[prefix + 'count'] > 0 else 0
 
         self.measures[prefix + 'size_max'] = max(collection_sizes_temp) \
-            if len(self.collection_sizes) > 0 else 0
+            if len(collection_sizes_temp) > 0 else 0
 
         self.measures[prefix + 'switch_count'] = self.measures[prefix + 'count'] - 1
 
@@ -1525,7 +1584,9 @@ def get_duration_measures(source_file_path,
                           output_path=None,
                           phonemic=False,
                           semantic=False,
-                          quiet=False):
+                          quiet=False,
+                          similarity_file = None,
+                          threshold = None):
     """Parses input arguments and runs clustering algorithm.
 
     :param source_file_path: Required. Location of the .csv or .TextGrid file to be
@@ -1538,6 +1599,13 @@ def get_duration_measures(source_file_path,
     :param semantic: The word category used for semantic clustering. Note: should be
         False if phonetic clustering is being used.
     :param quiet: Set to True if you want to suppress output to the screen during processing.
+    :param similarity_file (optional): When doing semantic processing, this is the path of
+        a file containing custom term similarity scores that will be used for clustering.
+        If a custom file is used, the default LSA-based clustering will not be performed.
+    :param threshold (opitonal): When doing semantic processing, this threshold is used
+        in conjunction with a custom similarity file. The value is used as a semantic
+        similarity cutoff in clustering. This argument is required if a custom similarity
+        file is specified.
 
     :return data: A dictionary of measures derived by clustering the input response.
 
@@ -1550,6 +1618,8 @@ def get_duration_measures(source_file_path,
     args.semantic = semantic
     args.source_file_path = source_file_path
     args.quiet = quiet
+    args.similarity_file = similarity_file
+    args.threshold = threshold
     args = validate_arguments(args)
 
     if args.phonemic:
@@ -1572,7 +1642,9 @@ def get_duration_measures(source_file_path,
     engine = VFClustEngine(response_category=response_category,
                       response_file_path=args.source_file_path,
                       target_file_path=target_file_path,
-                      quiet = args.quiet
+                      quiet = args.quiet,
+                      similarity_file = args.similarity_file,
+                      threshold = args.threshold
     )
 
 
@@ -1638,6 +1710,18 @@ def validate_arguments(args):
     if args.output_path:
         args.output_path = os.path.abspath(args.output_path)
 
+    #using custom similarity file
+    if args.similarity_file: #if it's not None
+        if not os.path.isfile(args.similarity_file):
+            raise VFClustException('The custom similarity file path you provided does not exist on your system!')
+        if not args.threshold:
+            raise VFClustException('You must specify a clustering threshold when using a custom similarity file. Use --threshold X, where X is the threshold number.')
+        try:
+            args.threshold = float(args.threshold)
+        except:
+            raise VFClustException('Error reading the custom threshold you provided. It must be a number, e.g. --threshold 6.7 or --threshold 10')
+        args.similarity_file = os.path.abspath(args.similarity_file)
+
     print "OK!"
     print
     print "Parsed arguments:"
@@ -1646,11 +1730,8 @@ def validate_arguments(args):
     return args
 
 def main(test=False):
-    # print "DEBUG",__name__, sys.argv
-    # from "vfclust test" --> vfclust.vfclust ['/Library/Frameworks/Python.framework/Versions/2.7/bin/vfclust', 'test']
-    # from "pyton vfclust.py" --> DEBUG __main__ ['vfclust.py', 'example/EXAMPLE_sem.TextGrid', '-s', 'animals']
 
-    if test or sys.argv[1] == "test":
+    if test or (len(sys.argv) > 1 and sys.argv[1] == "test"):
         test_script()
     else:
 
@@ -1679,26 +1760,50 @@ def main(test=False):
         parser.add_argument('-q', dest='quiet', default=False, action='store_true',
                             help="Use to eliminate output (default is print everything to stdout).")
 
+        parser.add_argument('--similarity-file', dest='similarity_file',default=None,
+                   help='''Usage: --similarity-file /path/to/similarity/file\n
+                        Location of custom word similarity file.
+                        If used, the default "LSA" option is overridden.
+                        You must also include a threshold number with
+                        --threshold X''')
+
+        parser.add_argument('--threshold',dest='threshold',default=None,
+                            help='''Usage: --threshold X, where X is a number.
+                                    A custom threshold is required when including a custom similarity file.''')
+
         args = parser.parse_args()
 
         get_duration_measures(output_path=args.output_path,
                                         phonemic=args.phonemic,
                                         semantic=args.semantic,
                                         source_file_path=args.source_file_path,
-                                        quiet=args.quiet)
+                                        quiet=args.quiet,
+                                        similarity_file = args.similarity_file,
+                                        threshold = args.threshold
+                                        )
 
 def test_script():
     path = os.path.abspath(os.path.join(os.path.dirname(__file__),'example'))
     example_csv = os.path.join(path,'EXAMPLE.csv')
     example_textgrid = os.path.join(path,'EXAMPLE_sem.TextGrid')
+
     print example_csv
     print example_textgrid
+
     results_csv = get_duration_measures(source_file_path = example_csv,
                                                 output_path=False,
                                                 phonemic='f')
     results_textgrid = get_duration_measures(source_file_path = example_textgrid,
                                                 output_path=False,
                                                 semantic='animals')
+    results_textgrid_custom = get_duration_measures(source_file_path = example_textgrid,
+                                                output_path=False,
+                                                semantic='animals',
+                                                similarity_file = os.path.abspath(os.path.join(os.path.dirname(__file__),'data/similarity/similarity.txt')),
+                                                threshold = 0.5)
+
+    print "TEST FINISHED SUCCESSFULLY"
+
 
 
 #if it's called as python vfclust.py, this happens

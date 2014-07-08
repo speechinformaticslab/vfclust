@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to vfclust’s documentation! &mdash; vfclust 0.1.0 documentation</title>
+    <title>Welcome to VFClust’s documentation! &mdash; VFClust 0.1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="vfclust 0.1.0 documentation" href="#" /> 
+    <link rel="top" title="VFClust 0.1.0 documentation" href="#" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="#">vfclust 0.1.0 documentation</a> &raquo;</li> 
+        <li><a href="#">VFClust 0.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -45,7 +45,7 @@
           <div class="body">
             
   <div class="section" id="welcome-to-vfclust-s-documentation">
-<h1>Welcome to vfclust&#8217;s documentation!<a class="headerlink" href="#welcome-to-vfclust-s-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>Welcome to VFClust&#8217;s documentation!<a class="headerlink" href="#welcome-to-vfclust-s-documentation" title="Permalink to this headline">¶</a></h1>
 </div>
 <div class="section" id="vfclust">
 <h1>VFClust<a class="headerlink" href="#vfclust" title="Permalink to this headline">¶</a></h1>
@@ -138,7 +138,7 @@ dict object (if run as a package). The following metrics are calculated:</p>
 prefaced by &#8216;&#8217;COUNT_&#8217;&#8217; in the output.</p>
 <ul>
 <li><dl class="first docutils">
-<dt><strong>**total_words**</strong>: count of words (i.e. utterances with semantic content)</dt>
+<dt><strong>total_words</strong>: count of words (i.e. utterances with semantic content)</dt>
 <dd><p class="first last">spoken by the subject. Filled pauses, silences, coughs, breaths,
 words by the interviewer, etc. are all excluded from this count.</p>
 </dd>
@@ -277,13 +277,18 @@ collection members could be separated by asides or other noises.</p>
 <h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h3>
 <p>This package has been tested on Mac OS X (Mavericks). In order to run
 the package you must have the following installed on your machine:</p>
-<ol class="arabic simple" start="0">
-<li>Python 2.7</li>
-<li><strong>pip</strong>: To install pip from any computer that already has Python 2.7
-installed, go to your terminal or commandline of choice and enter the
-command below:</li>
+<ol class="arabic" start="0">
+<li><p class="first">Python 2.7</p>
+</li>
+<li><dl class="first docutils">
+<dt><strong>pip</strong>: pip should install with Python 2.7. If for some reason pip</dt>
+<dd><p class="first last">is not installed, go to your terminal or commandline of choice and
+enter the command below:</p>
+</dd>
+</dl>
+</li>
 </ol>
-<div class="highlight-python"><div class="highlight"><pre>easy\_install pip
+<div class="highlight-python"><div class="highlight"><pre>easy_install pip
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
@@ -353,7 +358,7 @@ and type</p>
 &gt;&gt; vfclust.test_script()
 </pre></div>
 </div>
-<p>All tests are the same in each case.</p>
+<p>All results are the same in each case.</p>
 </div>
 <div class="section" id="deploying">
 <h2>Deploying<a class="headerlink" href="#deploying" title="Permalink to this headline">¶</a></h2>
@@ -512,6 +517,11 @@ following restriction is placed on the use of this publication: if the
 UK Advanced Cryptics Dictionary is used in a software package or
 redistributed in any form, the copyright notice must be prominently
 displayed and the text of this document must be included verbatim.</p>
+<span class="target" id="module-vfclust"></span><p>To setup (from terminal):
+$ cd /path/to/vfclust/download
+$ python setup.py install</p>
+<p>&gt;&gt; import vfclust</p>
+<p>For arguments and default values, see the README.md file.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
@@ -536,7 +546,7 @@ displayed and the text of this document must be included verbatim.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to vfclust&#8217;s documentation!</a></li>
+<li><a class="reference internal" href="#">Welcome to VFClust&#8217;s documentation!</a></li>
 <li><a class="reference internal" href="#vfclust">VFClust</a><ul>
 <li><a class="reference internal" href="#clustering-in-vfclust">Clustering in VFClust</a><ul>
 <li><a class="reference internal" href="#output">Output</a></li>
@@ -589,11 +599,11 @@ displayed and the text of this document must be included verbatim.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="#">vfclust 0.1.0 documentation</a> &raquo;</li> 
+        <li><a href="#">VFClust 0.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Serguei Pakhomov..
+        &copy; Copyright 2014, Thomas Christie et al..
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

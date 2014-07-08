@@ -1,3 +1,4 @@
+
 #How to update:
 1. change version number in setup.py
 2. change CHANGES.txt to reflect changes
@@ -53,6 +54,11 @@ twine upload -r test dist/VFClust-0.1.4.1.tar.gz #or whatever the current versio
 #from virtualenv - source bin/activate
 pip install -i https://testpypi.python.org/pypi vfclust --upgrade
 
+#to convert to markdown
+import pypandoc
+z = pypandoc.convert('README','markdown',format='rst')
+with open('README.md','w') as outfile:
+outfile.write(z)
 
 - Get lit references for clustering
 - How were thresholds calculated?

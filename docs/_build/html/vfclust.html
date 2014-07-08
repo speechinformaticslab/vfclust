@@ -6,9 +6,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>vfclust package &mdash; vfclust 0.1.0 documentation</title>
+    <title>vfclust package &mdash; VFClust 0.1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="vfclust 0.1.0 documentation" href="index.html" /> 
+    <link rel="top" title="VFClust 0.1.0 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">vfclust 0.1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">VFClust 0.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,12 +52,15 @@
 <div class="section" id="module-vfclust.TextGridParser">
 <span id="vfclust-textgridparser-module"></span><h2>vfclust.TextGridParser module<a class="headerlink" href="#module-vfclust.TextGridParser" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="vfclust.TextGridParser.Phone">
+<em class="property">class </em><tt class="descclassname">vfclust.TextGridParser.</tt><tt class="descname">Phone</tt><big>(</big><em>phone</em>, <em>start</em>, <em>end</em><big>)</big><a class="headerlink" href="#vfclust.TextGridParser.Phone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+<dl class="class">
 <dt id="vfclust.TextGridParser.TextGrid">
 <em class="property">class </em><tt class="descclassname">vfclust.TextGridParser.</tt><tt class="descname">TextGrid</tt><big>(</big><em>textgrid</em><big>)</big><a class="headerlink" href="#vfclust.TextGridParser.TextGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Extract word and phone intervals from a TextGrid.</p>
-<p>These word and phone intervals contain the words and phones themselves,
-as well as their respective start and end times in the audio recording.</p>
 <dl class="method">
 <dt id="vfclust.TextGridParser.TextGrid.parse_phones">
 <tt class="descname">parse_phones</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.TextGridParser.TextGrid.parse_phones" title="Permalink to this definition">¶</a></dt>
@@ -89,112 +92,14 @@ end times are subsumed by the start and end times of the word.)</p>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 </dd></dl>
 
-<dl class="class">
-<dt id="vfclust.TextGridParser.Phone">
-<em class="property">class </em><tt class="descclassname">vfclust.TextGridParser.</tt><tt class="descname">Phone</tt><big>(</big><em>phone</em>, <em>start</em>, <em>end</em><big>)</big><a class="headerlink" href="#vfclust.TextGridParser.Phone" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-</dd></dl>
-
 </div>
 <div class="section" id="module-vfclust.vfclust">
 <span id="vfclust-vfclust-module"></span><h2>vfclust.vfclust module<a class="headerlink" href="#module-vfclust.vfclust" title="Permalink to this headline">¶</a></h2>
 <p>The VFClust package is designed to generate clustering analyses for transcriptions of semantic and phonemic verbal fluency test responses. In a verbal fluency test, the subject is given a set amount of time (usually 60 seconds) to name as many words as he or she can that correspond to a given specification. For a phonemic test, subjects are asked to name words that begin with a specific letter. For a semantic fluency test, subjects are asked to provide words of a certain category, e.g. animals.  VFClust groups words in responses based on phonemic or semantic similarity, as described below. It then calculates metrics derived from the discovered groups and returns them as a CSV file or Python dict.</p>
-<dl class="function">
-<dt id="vfclust.vfclust.print_table">
-<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">print_table</tt><big>(</big><em>table</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.print_table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function for printing tables to screen.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>table</strong> (<em>List of tuples.</em>) &#8211; List of tuples where each tuple contains the contents of a row,
-and each entry in the tuple is the contents of a cell in that row.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="vfclust.vfclust.get_mean">
-<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">get_mean</tt><big>(</big><em>list_in_question</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.get_mean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the mean of a list of numbers.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_in_question</strong> (<em>list</em>) &#8211; list of numbers</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">mean of the list of numbers</td>
-</tr>
-</tbody>
-</table>
-<p>:rtype : float</p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="vfclust.vfclust.VFClustException">
-<em class="property">exception </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">VFClustException</tt><a class="headerlink" href="#vfclust.vfclust.VFClustException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
-<p>Custom exception class &#8211; better than using asserts.</p>
-<dl class="attribute">
-<dt id="vfclust.vfclust.VFClustException.args">
-<tt class="descname">args</tt><a class="headerlink" href="#vfclust.vfclust.VFClustException.args" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="vfclust.vfclust.VFClustException.message">
-<tt class="descname">message</tt><a class="headerlink" href="#vfclust.vfclust.VFClustException.message" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="vfclust.vfclust.Args">
 <em class="property">class </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">Args</tt><a class="headerlink" href="#vfclust.vfclust.Args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dummy class to hold argument properties.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="vfclust.vfclust.Unit">
-<em class="property">class </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">Unit</tt><big>(</big><em>word</em>, <em>format</em>, <em>type</em>, <em>index_in_timed_response=None</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.Unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to hold a sequence of 1 or more adjacent words with the same stem, or a compound word.</p>
-<dl class="docutils">
-<dt>A Unit may represent:</dt>
-<dd><blockquote class="first">
-<div><ul class="simple">
-<li>single words (dog, cat)</li>
-<li>lemmatized/compound words (polar_bear)</li>
-<li>several adjacent words with the same root (follow/followed/following)</li>
-</ul>
-</div></blockquote>
-<dl class="last docutils">
-<dt>The object also includes:</dt>
-<dd><ul class="first last simple">
-<li>phonetic/semantic representation of the FIRST word, if more than one</li>
-<li>The start time of the first word and the ending time of the final word</li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>Initialization of Unit object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>word</strong> (<em>If format is &#8220;TextGrid&#8221;, this must be a TextGrid.Word object.
-If format is &#8220;csv&#8221;, this must be a string.</em>) &#8211; Original word that the Unit represents.</li>
-<li><strong>format</strong> (<em>str</em>) &#8211; &#8216;TextGrid&#8217; or &#8216;csv&#8217;</li>
-<li><strong>type</strong> (<em>str</em>) &#8211; &#8216;SEMANTIC&#8217; or &#8216;PHONETIC</li>
-<li><strong>index_in_timed_response</strong> (<em>int</em>) &#8211; Index in the raw response input.
-Used to find phone-level information later if necessary.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:rtype : Unit object</p>
 </dd></dl>
 
 <dl class="class">
@@ -205,29 +110,80 @@ Used to find phone-level information later if necessary.</li>
 relevant to type of clustering being performed by VFClust. It implements methods for
 simplifying the list of Units, removing repetitions, creating compound words, removing
 irrelevant response tokens, etc.</p>
-<p>Initializes a ParsedResponse object.</p>
+<dl class="method">
+<dt id="vfclust.vfclust.ParsedResponse.clean">
+<tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any Units that are not applicable given the current semantic or phonetic category.</p>
+<dl class="docutils">
+<dt>Modifies:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>self.unit_list: Removes Units from this list that do not fit into the clustering category.</dt>
+<dd><p class="first">it does by by either combining units to make compound words, combining units with the
+same stem, or eliminating units altogether if they do not conform to the category.</p>
+<blockquote class="last">
+<div><p>If the type is phonetic, this method also generates phonetic clusters for all Unit
+objects in self.unit_list.</p>
+</div></blockquote>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>This method performs three main tasks:</dt>
+<dd><ol class="first last arabic">
+<li><dl class="first docutils">
+<dt>Removes words that do not conform to the clustering category (i.e. start with the</dt>
+<dd><p class="first last">wrong letter, or are not an animal).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Combine adjacent words with the same stem into a single unit. The NLTK Porter Stemmer</dt>
+<dd><p class="first last">is used for determining whether stems are the same.
+<a class="reference external" href="http://www.nltk.org/_modules/nltk/stem/porter.html">http://www.nltk.org/_modules/nltk/stem/porter.html</a></p>
+</dd>
+</dl>
+</li>
+<li><p class="first">In the case of PHONETIC clustering, compute the phonetic representation of each unit.</p>
+</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.ParsedResponse.combine_same_stem_units">
+<tt class="descname">combine_same_stem_units</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.combine_same_stem_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines adjacent words with the same stem into a single unit.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>response_type</strong> (<em>str</em>) &#8211; &#8216;PHONETIC&#8217; or &#8216;SEMANTIC - used for determining whether
-lemmatization/tokenization should be done during initialization</li>
-<li><strong>letter_or_category</strong> (<em>str</em>) &#8211; letter (for type=&#8217;PHONETIC&#8217;) or string (for type=&#8217;SEMANTIC&#8217;)
-required for determining which Units in the list are appropriate responses
-to the current fluencyt ask</li>
-<li><strong>quiet</strong> (<em>bool</em>) &#8211; If True, suppresses output to screen.</li>
-<li><strong>cmudict</strong> (<em>dict</em>) &#8211; Dictionary of phonetic representations of words. Used for phonetic clustering.</li>
-<li><strong>english_words</strong> (<em>list</em>) &#8211; Big list of English words. Used to determine whether responses
-in the phonetic clustering response are in English.</li>
-<li><strong>lemmas</strong> (<em>set</em>) &#8211; Set of available lemmas, i.e. words in their simplest version (non-plural)</li>
-<li><strong>names</strong> (<em>list</em>) &#8211; List of tokenized responses, i.e. compound words.</li>
-<li><strong>permissible_words</strong> (<em>list</em>) &#8211; List of legal words of the relevant dimension</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> (<em>int</em>) &#8211; Index of Unit in self.unit_list to be combined with the
+subsequent Unit.</td>
 </tr>
 </tbody>
 </table>
+<dl class="docutils">
+<dt>Modifies:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>self.unit_list: Modifies the .original_text property of the Unit</dt>
+<dd><p class="first">corresponding to the index.  Changes the .end_time property to be the
+.end_time of the next Unit, as Units with the same stem are considered</p>
+<blockquote>
+<div><p>as single Unit inc lustering. Finally, after extracting the text and timing</p>
+</div></blockquote>
+<p class="last">information, it removes the unit at index+1.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="vfclust.vfclust.ParsedResponse.create_from_csv">
 <tt class="descname">create_from_csv</tt><big>(</big><em>token_list</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.create_from_csv" title="Permalink to this definition">¶</a></dt>
@@ -287,6 +243,33 @@ made into compound words where appropriate.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="vfclust.vfclust.ParsedResponse.display">
+<tt class="descname">display</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty-prints the ParsedResponse to the screen.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.ParsedResponse.generate_phonetic_representation">
+<tt class="descname">generate_phonetic_representation</tt><big>(</big><em>word</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.generate_phonetic_representation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a generated phonetic representation for a word.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>word</strong> (<em>str</em>) &#8211; a word to be phoneticized.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of phonemes representing the phoneticized word.</td>
+</tr>
+</tbody>
+</table>
+<p>This method is used for words for which there is no pronunication
+entry in the CMU dictionary. The function generates a
+pronunication for the word in the standard CMU format. This can then
+be converted to a compact phonetic representation using
+modify_phonetic_representation().</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="vfclust.vfclust.ParsedResponse.lemmatize">
 <tt class="descname">lemmatize</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.lemmatize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lemmatize all Units in self.unit_list.</p>
@@ -304,24 +287,6 @@ which semantic relatedness to other words&#8217; term vectors can be computed.
 (Term vectors were derived from a corpus in which inflected words were
 similarly lemmatized, meaning that , e.g., &#8216;dogs&#8217; will not have a term
 vector to use for semantic relatedness computation.)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.ParsedResponse.tokenize">
-<tt class="descname">tokenize</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.tokenize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tokenizes all multiword names in the list of Units.</p>
-<dl class="docutils">
-<dt>Modifies:</dt>
-<dd><ul class="first last simple">
-<li>(indirectly) self.unit_list, by combining words into compound words.</li>
-</ul>
-</dd>
-</dl>
-<p>This is done because many names may be composed of multiple words, e.g.,
-&#8216;grizzly bear&#8217;. In order to count the number of permissible words
-generated, and also to compute semantic relatedness between these
-multiword names and other names, multiword names must each be reduced to
-a respective single token.</p>
 </dd></dl>
 
 <dl class="method">
@@ -361,71 +326,6 @@ first.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="vfclust.vfclust.ParsedResponse.remove_unit">
-<tt class="descname">remove_unit</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.remove_unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes the unit at the given index in self.unit_list. Does not modify any other units.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.ParsedResponse.combine_same_stem_units">
-<tt class="descname">combine_same_stem_units</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.combine_same_stem_units" title="Permalink to this definition">¶</a></dt>
-<dd><p>Combines adjacent words with the same stem into a single unit.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>index</strong> (<em>int</em>) &#8211; Index of Unit in self.unit_list to be combined with the
-subsequent Unit.</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>Modifies:</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt>self.unit_list: Modifies the .original_text property of the Unit</dt>
-<dd><p class="first">corresponding to the index.  Changes the .end_time property to be the
-.end_time of the next Unit, as Units with the same stem are considered</p>
-<blockquote>
-<div><p>as single Unit inc lustering. Finally, after extracting the text and timing</p>
-</div></blockquote>
-<p class="last">information, it removes the unit at index+1.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.ParsedResponse.display">
-<tt class="descname">display</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.display" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pretty-prints the ParsedResponse to the screen.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.ParsedResponse.generate_phonetic_representation">
-<tt class="descname">generate_phonetic_representation</tt><big>(</big><em>word</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.generate_phonetic_representation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a generated phonetic representation for a word.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>word</strong> (<em>str</em>) &#8211; a word to be phoneticized.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of phonemes representing the phoneticized word.</td>
-</tr>
-</tbody>
-</table>
-<p>This method is used for words for which there is no pronunication
-entry in the CMU dictionary. The function generates a
-pronunication for the word in the standard CMU format. This can then
-be converted to a compact phonetic representation using
-modify_phonetic_representation().</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="vfclust.vfclust.ParsedResponse.modify_phonetic_representation">
 <tt class="descname">modify_phonetic_representation</tt><big>(</big><em>phonetic_representation</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.modify_phonetic_representation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a compact phonetic representation given a CMUdict-formatted representation.</p>
@@ -446,47 +346,54 @@ simlarity scores.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="vfclust.vfclust.ParsedResponse.clean">
-<tt class="descname">clean</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.clean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes any Units that are not applicable given the current semantic or phonetic category.</p>
-<dl class="docutils">
-<dt>Modifies:</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt>self.unit_list: Removes Units from this list that do not fit into the clustering category.</dt>
-<dd><p class="first">it does by by either combining units to make compound words, combining units with the
-same stem, or eliminating units altogether if they do not conform to the category.</p>
-<blockquote class="last">
-<div><p>If the type is phonetic, this method also generates phonetic clusters for all Unit
-objects in self.unit_list.</p>
-</div></blockquote>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-<dt>This method performs three main tasks:</dt>
-<dd><ol class="first last arabic">
-<li><dl class="first docutils">
-<dt>Removes words that do not conform to the clustering category (i.e. start with the</dt>
-<dd><p class="first last">wrong letter, or are not an animal).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Combine adjacent words with the same stem into a single unit. The NLTK Porter Stemmer</dt>
-<dd><p class="first last">is used for determining whether stems are the same.
-<a class="reference external" href="http://www.nltk.org/_modules/nltk/stem/porter.html">http://www.nltk.org/_modules/nltk/stem/porter.html</a></p>
-</dd>
-</dl>
-</li>
-<li><p class="first">In the case of PHONETIC clustering, compute the phonetic representation of each unit.</p>
-</li>
-</ol>
-</dd>
-</dl>
+<dt id="vfclust.vfclust.ParsedResponse.remove_unit">
+<tt class="descname">remove_unit</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.remove_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the unit at the given index in self.unit_list. Does not modify any other units.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="vfclust.vfclust.ParsedResponse.tokenize">
+<tt class="descname">tokenize</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.ParsedResponse.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tokenizes all multiword names in the list of Units.</p>
+<dl class="docutils">
+<dt>Modifies:</dt>
+<dd><ul class="first last simple">
+<li>(indirectly) self.unit_list, by combining words into compound words.</li>
+</ul>
+</dd>
+</dl>
+<p>This is done because many names may be composed of multiple words, e.g.,
+&#8216;grizzly bear&#8217;. In order to count the number of permissible words
+generated, and also to compute semantic relatedness between these
+multiword names and other names, multiword names must each be reduced to
+a respective single token.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vfclust.vfclust.Unit">
+<em class="property">class </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">Unit</tt><big>(</big><em>word</em>, <em>format</em>, <em>type</em>, <em>index_in_timed_response=None</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.Unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to hold a sequence of 1 or more adjacent words with the same stem, or a compound word.</p>
+<dl class="docutils">
+<dt>A Unit may represent:</dt>
+<dd><blockquote class="first">
+<div><ul class="simple">
+<li>single words (dog, cat)</li>
+<li>lemmatized/compound words (polar_bear)</li>
+<li>several adjacent words with the same root (follow/followed/following)</li>
+</ul>
+</div></blockquote>
+<dl class="last docutils">
+<dt>The object also includes:</dt>
+<dd><ul class="first last simple">
+<li>phonetic/semantic representation of the FIRST word, if more than one</li>
+<li>The start time of the first word and the ending time of the final word</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
@@ -494,187 +401,174 @@ objects in self.unit_list.</p>
 <em class="property">class </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">VFClustEngine</tt><big>(</big><em>response_category, response_file_path, target_file_path=None, collection_types=['cluster', 'chain'], similarity_measures=['phone', 'biphone', 'lsa'], clustering_parameter=91, quiet=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Class used for encapsulating clustering methods and data.</p>
-<p>Initialize for VFClust analysis of a verbal phonetic or semantic fluency test response.</p>
-<dl class="docutils">
-<dt>response_file_path &#8211; filepath for a comma-separated string comprising a</dt>
-<dd>file ID and the words, pauses, etc., produced during the
-attempt. Or, if the response format is a TextGrid file,
-the filepath for that file.
-Field 1 in the response file should hold some sort of file ID,
-e.g., a filename or subject ID. Subsequent fields must each hold
-a single word or filled pause, etc., that was produced during
-the attempt.</dd>
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.compute_between_collection_interval_duration">
+<tt class="descname">compute_between_collection_interval_duration</tt><big>(</big><em>prefix</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_between_collection_interval_duration" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Calculates BETWEEN-collection intervals for the current collection and measure type</dt>
+<dd>and takes their mean.</dd>
 </dl>
-<p>target_file_path &#8211; file to which VF-Clust CSV output will be written.
-collection_types &#8211; list of &#8220;cluster&#8221; or &#8220;chain&#8221; - what the measures should be calculated over
-similarity_measures &#8211; list of types of similarity measures to use between words</p>
-<blockquote>
-<div><ul class="simple">
-<li>at this point &#8220;phone&#8221; and &#8220;biphone&#8221; are supported</li>
-</ul>
-</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>response_category</strong> (<em>str</em>) &#8211; a letter in the case of phonetic clustering, or a word category
-(e.g. animals) in for phonetic clustering.</li>
-<li><strong>response_file_path</strong> (<em>str</em>) &#8211; file path of the subject response to be clustered.</li>
-<li><strong>target_file_path</strong> &#8211; (optional) directory in which the the .csv output file to be produced.</li>
-<li><strong>collection_types</strong> (<em>list</em>) &#8211; (optional) list of collection types to be used in clustering.
-A &#8220;chain&#8221; is list of response tokens in which every token is related to the tokens adjacent
-to it. A &#8220;cluster&#8221; is a list of response tokens in which every token is related to every
-token in the cluster.</li>
-<li><strong>similarity_measures</strong> &#8211; (optional) a list of similarity measures to be used. By default, &#8220;lsa&#8221;
-(Linear Semantic Analysis) is used for SEMANTIC clustering, and &#8220;phone&#8221; and &#8220;biphone&#8221; are used
-for PHONETIC clustering.</li>
-<li><strong>clustering_parameter</strong> &#8211; (optional) parameters to be used in clustering</li>
-<li><strong>quiet</strong> (<em>bool</em>) &#8211; (optional) If set to True, suppresses output to screen.</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prefix</strong> (<em>str</em>) &#8211; Prefix for the key entry in self.measures.</td>
 </tr>
 </tbody>
 </table>
-<dl class="docutils">
-<dt>The initialization of a VFClustEngine object performs the following:</dt>
-<dd><ul class="first last">
-<li><p class="first">parse input arguments</p>
-</li>
-<li><dl class="first docutils">
-<dt>loads relevant data from the supporting data directory to be used in</dt>
-<dd><p class="first last">clustering, i.e. permissible words, LSA feature vectors, a dictionary of
-English words, etc</p>
-</dd>
-</dl>
-</li>
-<li><p class="first">parses the subject response, generating a parsed_response object</p>
-</li>
-<li><p class="first">performs clustering</p>
-</li>
-<li><p class="first">produces a .csv file with clustering results.</p>
-</li>
-</ul>
-</dd>
-</dl>
-<p>The self.measures dictionary is used to hold all measures derived from the analysis.  The
-acutal collections produced are printed to screen, but only the measures derived from
-clustering are output to the .csv file.</p>
-<dl class="docutils">
-<dt>Methods are organized into two categories:</dt>
-<dd><ul class="first last">
-<li><p class="first"><a href="#id1"><span class="problematic" id="id2">load_</span></a> methods, in which data is loaded from disk</p>
-</li>
-<li><dl class="first docutils">
-<dt><a href="#id3"><span class="problematic" id="id4">get_</span></a> methods, which print processing information to screen, perform preprocessing and call related</dt>
-<dd><p class="first last">clustering methods. These are called from __init__</p>
-</dd>
-</dl>
-</li>
-<li><p class="first"><a href="#id5"><span class="problematic" id="id6">compute_</span></a> methods, which compute cluster-specific measures. These are called from <a href="#id7"><span class="problematic" id="id8">get_</span></a> methdos.</p>
-</li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Both clusters and chains are implemented as collection types. Because there is more than one type,
-the word &#8220;collection&#8221; is used throughout to refer to both clusters and chains. However, &#8220;clustering&#8221;
-is still used to mean the process of discovering these groups.</p>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">At this point, the only category of semantic clustering available is &#8220;animals.&#8221;</p>
-</div>
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.load_lsa_information">
-<tt class="descname">load_lsa_information</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.load_lsa_information" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads a dictionary from disk that maps permissible words to their LSA term vectors.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.get_similarity_measures">
-<tt class="descname">get_similarity_measures</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.get_similarity_measures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function for computing similarity measures.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.get_collections">
-<tt class="descname">get_collections</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.get_collections" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function for determining what the clusters/chains/other collections are.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.get_collection_measures">
-<tt class="descname">get_collection_measures</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.get_collection_measures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function for calculating measurements derived from clusters/chains/collections</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.get_raw_counts">
-<tt class="descname">get_raw_counts</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.get_raw_counts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines counts for unique words, repetitions, etc using the raw text response.</p>
+<p>Negative intervals (for overlapping clusters) are counted as 0 seconds.  Intervals are
+calculated as being the difference between the ending time of the last word in a collection
+and the start time of the first word in the subsequent collection.</p>
+<p>Note that these intervals are not necessarily silences, and may include asides, filled
+pauses, words from the examiner, etc.</p>
 <dl class="docutils">
 <dt>Adds the following measures to the self.measures dictionary:</dt>
 <dd><ul class="first last">
 <li><dl class="first docutils">
-<dt>COUNT_total_words: count of words (i.e. utterances with semantic content) spoken</dt>
-<dd><p class="first last">by the subject. Filled pauses, silences, coughs, breaths, words by the interviewer,
-etc. are all excluded from this count.</p>
+<dt>TIMING_(similarity_measure)_(collection_type)_between_collection_interval_duration_mean:</dt>
+<dd><p class="first last">average interval duration separating clusters</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.compute_collection_measures">
+<tt class="descname">compute_collection_measures</tt><big>(</big><em>no_singletons=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_collection_measures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes summaries of measures using the discovered collections.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>no_singletons</strong> &#8211; if True, omits collections of length 1 from all measures
+and includes &#8220;<a href="#id1"><span class="problematic" id="id2">no_singletons_</span></a>&#8221; in the measure name.</td>
+</tr>
+</tbody>
+</table>
+<p>Adds the following measures to the self.measures dictionary, prefaced by
+COLLECTION_(similarity_measure)_(collection_type)_:</p>
+<blockquote>
+<div><ul class="simple">
+<li>count: number of collections</li>
+<li>size_mean: mean size of collections</li>
+<li>size_max: size of largest collection</li>
+<li>switch_count: number of changes between clusters</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.compute_collections">
+<tt class="descname">compute_collections</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_collections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the collections (clusters,chains) that exist in parsed_response.</p>
+<dl class="docutils">
+<dt>Modified:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>self.collection_sizes: populated with a list of integers indicating</dt>
+<dd><p class="first last">the number of units belonging to each collection</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>COUNT_permissible_words: Number of words spoken by the subject that qualify as a</dt>
-<dd><p class="first last">valid response according to the clustering criteria. Compound words are counted
-as a single word in SEMANTIC clustering, but as two words in PHONETIC clustering.
-This is implemented by tokenizing SEMANTIC clustering responses in the __init__
-method before calling the current method.</p>
+<dt>self.collection_indices: populated with a list of strings indicating</dt>
+<dd><p class="first last">the indices of each element of each collection</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>COUNT_exact_repetitions: Number of words which repeat words spoken earlier in the</dt>
-<dd><p class="first last">response. Responses in SEMANTIC clustering are lemmatized before this function is
-called, so slight variations (dog, dogs) may be counted as exact responses.</p>
+<dt>self.collection_list: populated with a list lists, each list containing</dt>
+<dd><p class="first last">Unit objects belonging to each collection</p>
 </dd>
 </dl>
 </li>
+</ul>
+</dd>
+</dl>
+<p>There are two types of collections currently implemented:
+- cluster: every entry in a cluster is sufficiently similar to every other entry
+- chain: every entry in a chain is sufficiently similar to adjacent entries</p>
+<p>Similarity between words is calculated using the compute_similarity_score method.
+Scores between words are then thresholded and binarized using empirically-derived
+thresholds (see: ???). Overlap of clusters is allowed (a word can be part of
+multiple clusters), but overlapping chains are not possible, as any two adjacent
+words with a lower-than-threshold similarity breaks the chain.  Clusters subsumed
+by other clusters are not counted. Singletons, i.e., clusters of size 1, are
+included in this analysis.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.compute_duration_measures">
+<tt class="descname">compute_duration_measures</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_duration_measures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for computing measures derived from timing information.</p>
+<p>These are only computed if the response is textgrid with timing information.</p>
+<p>All times are in seconds.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.compute_pairwise_similarity_score">
+<tt class="descname">compute_pairwise_similarity_score</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_pairwise_similarity_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the average pairwise similarity score between all pairs of Units.</p>
+<p>The pairwise similarity is calculated as the sum of similarity scores for all pairwise
+word pairs in a response &#8211; except any pair composed of a word and
+itself &#8211; divided by the total number of words in an attempt. I.e.,
+the mean similarity for all pairwise word pairs.</p>
+<dl class="docutils">
+<dt>Adds the following measures to the self.measures dictionary:</dt>
+<dd><ul class="first last simple">
+<li>COLLECTION_collection_pairwise_similarity_score_mean: mean of pairwise similarity scores</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.compute_response_continuant_duration">
+<tt class="descname">compute_response_continuant_duration</tt><big>(</big><em>prefix</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_response_continuant_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes mean duration for continuants in response.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prefix</strong> (<em>str</em>) &#8211; Prefix for the key entry in self.measures.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Adds the following measures to the self.measures dictionary:</dt>
+<dd><ul class="first last">
 <li><dl class="first docutils">
-<dt>COUNT_stem_repetitions: Number of words stems identical to words uttered earlier in</dt>
-<dd><p class="first last">the response, according to the Porter Stemmer.  For example, &#8216;sled&#8217; and &#8216;sledding&#8217;
-have the same stem (&#8216;sled&#8217;), and &#8216;sledding&#8217; would be counted as a stem repetition.</p>
+<dt>TIMING_(similarity_measure)_(collection_type)_response_continuant_duration_mean: average</dt>
+<dd><p class="first last">vowel duration of all vowels in the response.</p>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>COUNT_examiner_words: Number of words uttered by the examiner. These start</dt>
-<dd><p class="first last">with &#8220;<a href="#id9"><span class="problematic" id="id10">E_</span></a>&#8221; in .TextGrid files.</p>
+</ul>
 </dd>
 </dl>
-</li>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.compute_response_vowel_duration">
+<tt class="descname">compute_response_vowel_duration</tt><big>(</big><em>prefix</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_response_vowel_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes mean vowel duration in entire response.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prefix</strong> (<em>str</em>) &#8211; Prefix for the key entry in self.measures.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Adds the following measures to the self.measures dictionary:</dt>
+<dd><ul class="first last">
 <li><dl class="first docutils">
-<dt>COUNT_filled_pauses: Number of filled pauses uttered by the subject. These begin</dt>
-<dd><p class="first last">with &#8220;<a href="#id11"><span class="problematic" id="id12">FILLEDPAUSE_</span></a>&#8221; in the .TextGrid file.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>COUNT_word_fragments: Number of word fragments uttered by the subject. These</dt>
-<dd><p class="first last">end with &#8220;-&#8221; in the .TextGrid file.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>COUNT_asides: Words spoken by the subject that do not adhere to the test criteria are</dt>
-<dd><p class="first last">counted as asides, i.e. words that do not start with the appropriate letter or that
-do not represent an animal.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>COUNT_unique_permissible_words: Number of works spoken by the subject, less asides,</dt>
-<dd><p class="first last">stem repetitions and exact repetitions.</p>
+<dt>TIMING_(similarity_measure)_(collection_type)_response_vowel_duration_mean: average</dt>
+<dd><p class="first last">vowel duration of all vowels in the response.</p>
 </dd>
 </dl>
 </li>
@@ -771,176 +665,26 @@ print to the screen.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.compute_collections">
-<tt class="descname">compute_collections</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_collections" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds the collections (clusters,chains) that exist in parsed_response.</p>
-<dl class="docutils">
-<dt>Modified:</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt>self.collection_sizes: populated with a list of integers indicating</dt>
-<dd><p class="first last">the number of units belonging to each collection</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>self.collection_indices: populated with a list of strings indicating</dt>
-<dd><p class="first last">the indices of each element of each collection</p>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>self.collection_list: populated with a list lists, each list containing</dt>
-<dd><p class="first last">Unit objects belonging to each collection</p>
-</dd>
-</dl>
-</li>
+<dt id="vfclust.vfclust.VFClustEngine.compute_within_collection_continuant_duration">
+<tt class="descname">compute_within_collection_continuant_duration</tt><big>(</big><em>prefix</em>, <em>no_singletons=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_within_collection_continuant_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the mean duration of continuants from Units within clusters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prefix</strong> (<em>str</em>) &#8211; Prefix for the key entry in self.measures</li>
+<li><strong>no_singletons</strong> (<em>bool</em>) &#8211; If False, excludes collections of length 1 from calculations
+and adds &#8220;no_singletons&#8221; to the prefix</li>
 </ul>
-</dd>
-</dl>
-<p>There are two types of collections currently implemented:
-- cluster: every entry in a cluster is sufficiently similar to every other entry
-- chain: every entry in a chain is sufficiently similar to adjacent entries</p>
-<p>Similarity between words is calculated using the compute_similarity_score method.
-Scores between words are then thresholded and binarized using empirically-derived
-thresholds (see: ???). Overlap of clusters is allowed (a word can be part of
-multiple clusters), but overlapping chains are not possible, as any two adjacent
-words with a lower-than-threshold similarity breaks the chain.  Clusters subsumed
-by other clusters are not counted. Singletons, i.e., clusters of size 1, are
-included in this analysis.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.compute_pairwise_similarity_score">
-<tt class="descname">compute_pairwise_similarity_score</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_pairwise_similarity_score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the average pairwise similarity score between all pairs of Units.</p>
-<p>The pairwise similarity is calculated as the sum of similarity scores for all pairwise
-word pairs in a response &#8211; except any pair composed of a word and
-itself &#8211; divided by the total number of words in an attempt. I.e.,
-the mean similarity for all pairwise word pairs.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="docutils">
 <dt>Adds the following measures to the self.measures dictionary:</dt>
 <dd><ul class="first last simple">
-<li>COLLECTION_collection_pairwise_similarity_score_mean: mean of pairwise similarity scores</li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.compute_collection_measures">
-<tt class="descname">compute_collection_measures</tt><big>(</big><em>no_singletons=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_collection_measures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes summaries of measures using the discovered collections.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>no_singletons</strong> &#8211; if True, omits collections of length 1 from all measures
-and includes &#8220;<a href="#id13"><span class="problematic" id="id14">no_singletons_</span></a>&#8221; in the measure name.</td>
-</tr>
-</tbody>
-</table>
-<p>Adds the following measures to the self.measures dictionary, prefaced by
-COLLECTION_(similarity_measure)_(collection_type)_:</p>
-<blockquote>
-<div><ul class="simple">
-<li>count: number of collections</li>
-<li>size_mean: mean size of collections</li>
-<li>size_max: size of largest collection</li>
-<li>switch_count: number of changes between clusters</li>
-</ul>
-</div></blockquote>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.compute_duration_measures">
-<tt class="descname">compute_duration_measures</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_duration_measures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function for computing measures derived from timing information.</p>
-<p>These are only computed if the response is textgrid with timing information.</p>
-<p>All times are in seconds.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.compute_response_vowel_duration">
-<tt class="descname">compute_response_vowel_duration</tt><big>(</big><em>prefix</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_response_vowel_duration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes mean vowel duration in entire response.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prefix</strong> (<em>str</em>) &#8211; Prefix for the key entry in self.measures.</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>Adds the following measures to the self.measures dictionary:</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt>TIMING_(similarity_measure)_(collection_type)_response_vowel_duration_mean: average</dt>
-<dd><p class="first last">vowel duration of all vowels in the response.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.compute_response_continuant_duration">
-<tt class="descname">compute_response_continuant_duration</tt><big>(</big><em>prefix</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_response_continuant_duration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes mean duration for continuants in response.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prefix</strong> (<em>str</em>) &#8211; Prefix for the key entry in self.measures.</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>Adds the following measures to the self.measures dictionary:</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt>TIMING_(similarity_measure)_(collection_type)_response_continuant_duration_mean: average</dt>
-<dd><p class="first last">vowel duration of all vowels in the response.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.compute_between_collection_interval_duration">
-<tt class="descname">compute_between_collection_interval_duration</tt><big>(</big><em>prefix</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_between_collection_interval_duration" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Calculates BETWEEN-collection intervals for the current collection and measure type</dt>
-<dd>and takes their mean.</dd>
-</dl>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prefix</strong> (<em>str</em>) &#8211; Prefix for the key entry in self.measures.</td>
-</tr>
-</tbody>
-</table>
-<p>Negative intervals (for overlapping clusters) are counted as 0 seconds.  Intervals are
-calculated as being the difference between the ending time of the last word in a collection
-and the start time of the first word in the subsequent collection.</p>
-<p>Note that these intervals are not necessarily silences, and may include asides, filled
-pauses, words from the examiner, etc.</p>
-<dl class="docutils">
-<dt>Adds the following measures to the self.measures dictionary:</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt>TIMING_(similarity_measure)_(collection_type)_between_collection_interval_duration_mean:</dt>
-<dd><p class="first last">average interval duration separating clusters</p>
-</dd>
-</dl>
-</li>
+<li>TIMING_(similarity_measure)_(collection_type)_within_collection_continuant_duration_mean</li>
 </ul>
 </dd>
 </dl>
@@ -997,29 +741,100 @@ and adds &#8220;no_singletons&#8221; to the prefix</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="vfclust.vfclust.VFClustEngine.compute_within_collection_continuant_duration">
-<tt class="descname">compute_within_collection_continuant_duration</tt><big>(</big><em>prefix</em>, <em>no_singletons=False</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.compute_within_collection_continuant_duration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the mean duration of continuants from Units within clusters.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>prefix</strong> (<em>str</em>) &#8211; Prefix for the key entry in self.measures</li>
-<li><strong>no_singletons</strong> (<em>bool</em>) &#8211; If False, excludes collections of length 1 from calculations
-and adds &#8220;no_singletons&#8221; to the prefix</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<dt id="vfclust.vfclust.VFClustEngine.get_collection_measures">
+<tt class="descname">get_collection_measures</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.get_collection_measures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for calculating measurements derived from clusters/chains/collections</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.get_collections">
+<tt class="descname">get_collections</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.get_collections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for determining what the clusters/chains/other collections are.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.get_raw_counts">
+<tt class="descname">get_raw_counts</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.get_raw_counts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines counts for unique words, repetitions, etc using the raw text response.</p>
 <dl class="docutils">
 <dt>Adds the following measures to the self.measures dictionary:</dt>
-<dd><ul class="first last simple">
-<li>TIMING_(similarity_measure)_(collection_type)_within_collection_continuant_duration_mean</li>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>COUNT_total_words: count of words (i.e. utterances with semantic content) spoken</dt>
+<dd><p class="first last">by the subject. Filled pauses, silences, coughs, breaths, words by the interviewer,
+etc. are all excluded from this count.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>COUNT_permissible_words: Number of words spoken by the subject that qualify as a</dt>
+<dd><p class="first last">valid response according to the clustering criteria. Compound words are counted
+as a single word in SEMANTIC clustering, but as two words in PHONETIC clustering.
+This is implemented by tokenizing SEMANTIC clustering responses in the __init__
+method before calling the current method.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>COUNT_exact_repetitions: Number of words which repeat words spoken earlier in the</dt>
+<dd><p class="first last">response. Responses in SEMANTIC clustering are lemmatized before this function is
+called, so slight variations (dog, dogs) may be counted as exact responses.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>COUNT_stem_repetitions: Number of words stems identical to words uttered earlier in</dt>
+<dd><p class="first last">the response, according to the Porter Stemmer.  For example, &#8216;sled&#8217; and &#8216;sledding&#8217;
+have the same stem (&#8216;sled&#8217;), and &#8216;sledding&#8217; would be counted as a stem repetition.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>COUNT_examiner_words: Number of words uttered by the examiner. These start</dt>
+<dd><p class="first last">with &#8220;<a href="#id3"><span class="problematic" id="id4">E_</span></a>&#8221; in .TextGrid files.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>COUNT_filled_pauses: Number of filled pauses uttered by the subject. These begin</dt>
+<dd><p class="first last">with &#8220;<a href="#id5"><span class="problematic" id="id6">FILLEDPAUSE_</span></a>&#8221; in the .TextGrid file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>COUNT_word_fragments: Number of word fragments uttered by the subject. These</dt>
+<dd><p class="first last">end with &#8220;-&#8221; in the .TextGrid file.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>COUNT_asides: Words spoken by the subject that do not adhere to the test criteria are</dt>
+<dd><p class="first last">counted as asides, i.e. words that do not start with the appropriate letter or that
+do not represent an animal.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>COUNT_unique_permissible_words: Number of works spoken by the subject, less asides,</dt>
+<dd><p class="first last">stem repetitions and exact repetitions.</p>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.get_similarity_measures">
+<tt class="descname">get_similarity_measures</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.get_similarity_measures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for computing similarity measures.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vfclust.vfclust.VFClustEngine.load_lsa_information">
+<tt class="descname">load_lsa_information</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.VFClustEngine.load_lsa_information" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a dictionary from disk that maps permissible words to their LSA term vectors.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1033,6 +848,13 @@ indicates the category requirement of the stimulus (i.e. &#8216;f&#8217; or &#82
 for phonetic and semantic fluency test, respectively.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="exception">
+<dt id="vfclust.vfclust.VFClustException">
+<em class="property">exception </em><tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">VFClustException</tt><a class="headerlink" href="#vfclust.vfclust.VFClustException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Custom exception class &#8211; better than using asserts.</p>
 </dd></dl>
 
 <dl class="function">
@@ -1065,9 +887,20 @@ False if phonetic clustering is being used.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="vfclust.vfclust.validate_arguments">
-<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">validate_arguments</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.validate_arguments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes sure arguments are valid, specified files exist, etc.</p>
+<dt id="vfclust.vfclust.get_mean">
+<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">get_mean</tt><big>(</big><em>list_in_question</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.get_mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the mean of a list of numbers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>list_in_question</strong> (<em>list</em>) &#8211; list of numbers</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">mean of the list of numbers</td>
+</tr>
+</tbody>
+</table>
+<p>:rtype : float</p>
 </dd></dl>
 
 <dl class="function">
@@ -1076,9 +909,30 @@ False if phonetic clustering is being used.</li>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="vfclust.vfclust.print_table">
+<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">print_table</tt><big>(</big><em>table</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.print_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for printing tables to screen.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>table</strong> (<em>List of tuples.</em>) &#8211; List of tuples where each tuple contains the contents of a row,
+and each entry in the tuple is the contents of a cell in that row.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="vfclust.vfclust.test_script">
 <tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">test_script</tt><big>(</big><big>)</big><a class="headerlink" href="#vfclust.vfclust.test_script" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="vfclust.vfclust.validate_arguments">
+<tt class="descclassname">vfclust.vfclust.</tt><tt class="descname">validate_arguments</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#vfclust.vfclust.validate_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes sure arguments are valid, specified files exist, etc.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-vfclust">
@@ -1139,11 +993,11 @@ $ python setup.py install</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">vfclust 0.1.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">VFClust 0.1.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Serguei Pakhomov..
+        &copy; Copyright 2014, Thomas Christie et al..
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

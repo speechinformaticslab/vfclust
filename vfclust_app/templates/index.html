@@ -1,0 +1,115 @@
+<!DOCTYPE html> 
+	<html>     
+		<head> 
+			<meta charset="utf-8"/>
+            <title>Phonetic Clustering</title>     
+        </head>     
+        	<body>
+<b><br><font size="+2">Automated Phonetic-Clustering
+Analysis</font></br></b> <br><br></br><b>INSTRUCTIONS</b></br>
+<br>Please enter a comma-separated transcription of a phonemic verbal
+fluency test response, and, in the below field, the letter specified for the
+test attempt. The response must have at least three words beginning with
+the specified letter, and <b>should not include any newline
+characters or punctuation, besides commas</b>. (Anything following a
+newline character will be ignored.)</br> <br>Here is an example of a
+correctly formatted response transcription for the letter 'F':
+friend,fun,fort,friend,fun,fort,funny,fish,fisherman,finish </br><br></br>      <form action="/" method="post" >
+<TEXTAREA type="text" title="Enter comma separted string values here."
+name="Comma_Separted_String_Box" rows="15" cols="50" /> </TEXTAREA> <br>
+</br> Letter (e.g., f): <input type="letter" name="Letterbox" /> <br>
+</br> <input type="submit" name="evaluationbox" 
+value="Click here to generate clustering analysis. Scroll down to view." /> <br> </br>
+</form> <br></br><b>GLOSSARY</b><br> <br> <b>Total words</b> <br></br> A
+count of the total number of words for a test-response transcription,
+i.e., the number of fields in the comma-separated transcription. This is
+not just words that begin with the correct letter, but rather <i>all</i>
+words in the transcription. <br></br> <b>Permissible words</b> <br></br>
+Words that begin with the letter specified for the test attempt,
+excluding repetitions. This is an approximate equivalent of the standard
+scoring measure for phonemic verbal fluency testing. In standard
+scoring, proper nouns are excluded from this count, as well as
+inflectional word variations -- e.g., <i>friendlier</i> or
+<i>friendliest</i> if <i>friendly</i> has already been said.
+Additionally, words in off-topic speech that happen to begin with the
+correct letter would not be counted. Because our system counts
+<i>any</i> word beginning with the correct letter, our count is only an
+(likely close) approximation of a correct manually calculated standard
+store. <br></br> <b>Repetitions</b> <br></br> Words that begin with the
+correct letter, but have already been said. Because our system considers
+off-topic words that happen to begin with the correct letter legal, our
+count is also an (likely close) approximation of a correct manually
+calculated repetitions count. <br></br> <b>Off-topic words</b>
+<br></br> This comprises any words that do not begin with the correct
+letter and are not included in any other transcriptional category (e.g.,
+if filled pauses, examiner speech, word fragments, etc., are transcribed
+with a special tag or marker). Again, because off topic-speech words
+beginning with the correct letter will be considered legal, our system
+gives an approximation of a correct manually calculated count of
+off-topic speech words. <br></br> <b>Phonetic-similarity score (PSS)</b>
+<br></br> To generate a PSS for two phonetic representations, we use an
+edit-distance method. First, the Levenshtein distance between the two
+compact phonetic-representation strings is calculated and normalized to
+the length of the longer string; then that value is subtracted from 1.
+<br></br> <b>Mean pairwise phonetic similarity score</b> <br></br> This
+score is calculated as the sum of PSSs for every possible word pair in
+an attempt -- except any pair comprising a word and itself -- divided by
+the total number of words in an attempt -- i.e., the mean PSS for all
+possible word pairs in an attempt. <br></br> <b>Phonetic chains</b>
+<br></br> A phonetic chain comprises two or more words for which each
+word has a PSS equal to or greater than the phonetic-similarity
+threshold (for the given letter) with both the word prior to it in the
+chain (unless it is the first word in the chain) and the word subsequent
+to it in the chain (unless it is the last word in the chain). <br></br>
+<b>Phonetic-similarity threshold (PST)</b> <br></br> When using the
+edit-distance method, similarity is determined by whether the PSS for a
+pair of words exceeds a threshold that is set for the specific letter
+given. If the test response is for the letter 'f', for instance, the
+phonetic similarity threshold for 'f' will be used in determining
+similarity of phonetic representations for words in that response. To
+determine similarity thresholds for each letter, we randomly selected
+1000 words beginning with that letter from our modified CMUdict. Then,
+we computed the 499,500 pairwise PSSs for those 1000 words' phonetic
+representations, and set the threshold for the letter as the upper
+quintile of those scores. <br></br> <b>Phonetic clusters</b> <br></br> A
+phonetic cluster comprises two or more words for which each word has a
+PSS equal than or greater to the PST for the given letter with every
+other word in the cluster. Overlap of clusters is allowed, i.e., a word
+can be part of multiple clusters. Clusters subsumed by other clusters
+are not counted. <br></br> <b>Common-biphone score (CBS)</b> <br></br>
+The CBS is binary, with a score of 1 given for two phonetic
+representations that have a common initial and/or final biphone, and 0
+for two strings that have neither in common. <br></br> <b>Mean pairwise
+common-biphone score</b> <br></br> This score is calculated as the sum
+of CBSs for every possible word pair in an attempt -- except any pair
+comprising a word and itself -- divided by the total number of words in
+an attempt -- i.e., the mean CBS for all possible word pairs in an
+attempt. <br></br> <b>Common-biphone chains</b> <br></br> A
+common-biphone chain comprises two or more words for which each word has
+a CBS of 1 with both the word prior to it in the chain (unless it is the
+first word in the chain) and the word subsequent to it in the chain
+(unless it is the last word in the chain). <br></br> <b>Common-biphone
+clusters</b> <br></br> A common-biphone cluster comprises two or more
+words for which each word has a CBS of 1 with every other word in the
+cluster. Overlap of clusters is allowed, i.e., a word can be part of
+multiple clusters. Clusters subsumed by other clusters are not counted.
+<br></br> <b>Cluster/chain switches</b> <br></br> A cluster/chain switch
+is any transition from a chain/cluster or singleton to a new singleton
+or chain/cluster. <br></br> <b>Singletons</b> <br></br> Singletons are
+chains comprising a single word, or clusters comprising a single word.
+In scores that were computed including singletons, these are treated,
+respectively, as chains of length 1 or clusters of size 1.<br></br>
+<br></br>
+
+            {% with messages = get_flashed_messages() %}             
+				{% if messages %}               
+				<b>RESULT<b>                 
+					<pre>
+                    	{% for message in messages %} 
+						{{ message }}
+                    	{% endfor %}                 
+                	</pre>             
+				{% endif %}         
+			{% endwith %}     
+			</body> 
+	</html>

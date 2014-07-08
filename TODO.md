@@ -1,8 +1,8 @@
 # TO DO
 
+- fix up pypi package using tips from website
+- ask kyle about testing
+http://docs.python-guide.org/en/latest/writing/tests/
 
-### Look up uncommon words
- 1. load a word list based on current category
- 2. if the given word isn't on the list, look on the web (Webster's API)
- 3. if still nothing, it doesn't count as a word
-
+- with identical words, put an identifier in (-999 or something), then don't include that number when 
+doing measures like "mean similarity score"

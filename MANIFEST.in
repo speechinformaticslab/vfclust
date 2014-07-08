@@ -1,25 +1,19 @@
 #documentation
 recursive-include docs/_build/html *.*
 
-#data used for clustering
-recursive-include vfclust/data *
+#package
+recursive-include vfclust *
 
-#phonetic representation
-include vfclust/t2p/t2p.c
-include vfclust/t2p/t2pin.tmp
-include vfclust/Makefile
-
-#example files
-include vfclust/example/EXAMPLE.*
-include vfclust/example/EXAMPLE_sem.*
+#omit some unnecessary files (results, compiled source, mac junk)
+recursive-exclude * *_vfclust_*
+exclude vfclust/t2p/t2p
+recursive-exclude * .DS_Store
 
 #Misc
 include CHANGES.txt
 include LICENSE.txt
 include README
 
-## Testing
-include vfclust/test/__init__.py
 
 ## When adding in the app:
 # include vfclust_app 
